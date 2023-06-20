@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         container = findViewById(R.id.container);
         getLayoutInflater().inflate(R.layout.layout_login, container, true);
 
-
+        System.out.println();
 
 //        container.removeAllViews();
 //        getLayoutInflater().inflate(R.layout.layout_register, container, true);
