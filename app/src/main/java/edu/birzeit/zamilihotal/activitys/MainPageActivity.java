@@ -1,0 +1,34 @@
+package edu.birzeit.zamilihotal.activitys;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.widget.TextView;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import com.google.gson.Gson;
+
+import edu.birzeit.androidprojectzamili.R;
+import edu.birzeit.zamilihotal.model.User;
+
+public class MainPageActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main_page);
+
+        TextView t = findViewById(R.id.textView);
+
+        SharedPreferences sp = this.getSharedPreferences("main", Context.MODE_PRIVATE);
+
+        String currUser = sp.getString("currUser", null);
+
+        Gson gson = new Gson();
+
+        User u = gson.fromJson(currUser, User.class);
+
+        t.setText(u.getEmail());
+
+    }
+}
