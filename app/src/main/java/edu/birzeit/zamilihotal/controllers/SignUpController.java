@@ -9,17 +9,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.gson.Gson;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import edu.birzeit.zamilihotal.MainActivity;
-import edu.birzeit.zamilihotal.activitys.MainPageActivity;
 import edu.birzeit.zamilihotal.database.DataBase;
 import edu.birzeit.zamilihotal.model.User;
 

@@ -1,18 +1,13 @@
 package edu.birzeit.zamilihotal.activitys;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.firebase.auth.FirebaseUser;
-import com.google.gson.Gson;
-
 import edu.birzeit.androidprojectzamili.R;
 import edu.birzeit.zamilihotal.database.DataBase;
-import edu.birzeit.zamilihotal.model.User;
+
 
 public class MainPageActivity extends AppCompatActivity {
 

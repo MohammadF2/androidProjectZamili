@@ -69,9 +69,10 @@ public class MainActivity extends AppCompatActivity {
             getLayoutInflater().inflate(R.layout.layout_login, container, true);
             setSignUpFromSignIn();
         } else {
-
+            Intent intent = new Intent(MainActivity.this, MainPageActivity.class);
+            startActivity(intent);
+            finish();
         }
-
     }
 
     private void setSignUpFromSignIn() {
