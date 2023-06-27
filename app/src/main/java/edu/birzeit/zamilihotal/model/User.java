@@ -1,33 +1,14 @@
 package edu.birzeit.zamilihotal.model;
 
 public class User {
-    private String name;
-    private String mobile;
+
     private String email;
     private String password;
 
-    public User(String name, String mobile, String email, String password) {
-        this.name = name;
-        this.mobile = mobile;
+    public User( String email, String password) {
+
         this.email = email;
         this.password = password;
-    }
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
     }
 
     public String getEmail() {

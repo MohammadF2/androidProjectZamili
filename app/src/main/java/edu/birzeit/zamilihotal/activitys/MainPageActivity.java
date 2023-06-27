@@ -6,9 +6,12 @@ import android.os.Bundle;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 
 import edu.birzeit.androidprojectzamili.R;
+import edu.birzeit.zamilihotal.database.DataBase;
 import edu.birzeit.zamilihotal.model.User;
 
 public class MainPageActivity extends AppCompatActivity {
@@ -20,15 +23,9 @@ public class MainPageActivity extends AppCompatActivity {
 
         TextView t = findViewById(R.id.textView);
 
-        SharedPreferences sp = this.getSharedPreferences("main", Context.MODE_PRIVATE);
+        FirebaseUser user = DataBase.auth.getCurrentUser();
 
-        String currUser = sp.getString("currUser", null);
-
-        Gson gson = new Gson();
-
-        User u = gson.fromJson(currUser, User.class);
-
-        t.setText(u.getEmail());
+        t.setText(user.getEmail());
 
     }
 }

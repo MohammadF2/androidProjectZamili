@@ -1,5 +1,6 @@
 package edu.birzeit.zamilihotal;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
@@ -7,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -14,12 +16,25 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import edu.birzeit.androidprojectzamili.R;
 import edu.birzeit.zamilihotal.activitys.MainPageActivity;
 import edu.birzeit.zamilihotal.controllers.SignUpController;
+import edu.birzeit.zamilihotal.database.DataBase;
 import edu.birzeit.zamilihotal.model.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,12 +56,21 @@ public class MainActivity extends AppCompatActivity {
         container = findViewById(R.id.container);
         getLayoutInflater().inflate(R.layout.layout_login, container, true);
 
-        System.out.println();
-
-//        container.removeAllViews();
-//        getLayoutInflater().inflate(R.layout.layout_register, container, true);
-
         setSignUpFromSignIn();
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser user = DataBase.auth.getCurrentUser();
+        if(user == null) {
+            container.removeAllViews();
+            getLayoutInflater().inflate(R.layout.layout_login, container, true);
+            setSignUpFromSignIn();
+        } else {
+
+        }
 
     }
 
@@ -64,22 +88,19 @@ public class MainActivity extends AppCompatActivity {
                  if (email.getText().toString().equals("") || password.getText().toString().equals(""))
                      error.setText("You should enter email and password");
                  else {
-                     SharedPreferences sp = MainActivity.this.getSharedPreferences("main", Context.MODE_PRIVATE);
-                     Gson gson = new Gson();
-                     User user = gson.fromJson(sp.getString(email.getText().toString(), null), User.class);
-                     if (user == null)
-                         error.setText("Email is wrong");
-                     else {
-                         if(!password.getText().toString().equals(user.getPassword()))
-                             error.setText("password is wrong");
-                         else {
-                             SharedPreferences.Editor editor = sp.edit();
-                             editor.putString("currUser", gson.toJson(user));
-                             editor.commit();
-                             Intent intent = new Intent(MainActivity.this, MainPageActivity.class);
-                             startActivity(intent);
+                     String emailTxt = email.getText().toString();
+                     String passwordTxt = password.getText().toString();
+                     DataBase.auth.signInWithEmailAndPassword(emailTxt, passwordTxt).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                         @Override
+                         public void onComplete(@NonNull Task<AuthResult> task) {
+                             if(task.isSuccessful()) {
+                                Intent intent = new Intent(MainActivity.this, MainPageActivity.class);
+                                MainActivity.this.startActivity(intent);
+                             } else {
+                                 error.setText("Email or password are wrong");
+                             }
                          }
-                     }
+                     });
                  }
              }
          });
@@ -89,7 +110,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 container.removeAllViews();
                 getLayoutInflater().inflate(R.layout.layout_register, container, true);
-
                 setSignInFromSignUp();
             }
         });
@@ -107,9 +127,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         Button signUpB = findViewById(R.id.signUpB);
-        EditText name = findViewById(R.id.signUpName);
         EditText email = findViewById(R.id.signUpEmail);
-        EditText mobile = findViewById(R.id.signUpMobile);
+
 
         EditText pass1 = findViewById(R.id.signUpPass);
         EditText pass2 = findViewById(R.id.repeatpass);
@@ -122,9 +141,8 @@ public class MainActivity extends AppCompatActivity {
                 } else {
 
                     SharedPreferences sp = MainActivity.this.getSharedPreferences("main", Context.MODE_PRIVATE);
-
                     if(sp.getString(email.getText().toString(), null) == null) {
-                        SignUpController controller = new SignUpController(new User(name.getText().toString(), mobile.getText().toString(), email.getText().toString(), pass1.getText().toString()), MainActivity.this);
+                        SignUpController controller = new SignUpController(new User(email.getText().toString(), pass1.getText().toString()), MainActivity.this);
                         container.removeAllViews();
                         getLayoutInflater().inflate(R.layout.layout_login, container, true);
                         setSignUpFromSignIn();
@@ -136,4 +154,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
+
 }

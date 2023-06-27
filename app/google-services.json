@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "783118522233",
+    "project_id": "androidprojectzamili",
+    "storage_bucket": "androidprojectzamili.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:783118522233:android:894172850352a7153881a8",
+        "android_client_info": {
+          "package_name": "edu.birzeit.androidprojectzamili"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "783118522233-cg8qsb0odvi9gv5citssdvapu2rfqkuv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDX_Qn4YM0tpEGOhtn97NDJSPfZI3Ly1xE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "783118522233-cg8qsb0odvi9gv5citssdvapu2rfqkuv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

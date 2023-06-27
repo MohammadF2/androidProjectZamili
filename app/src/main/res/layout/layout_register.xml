@@ -22,25 +22,11 @@
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/parent"
-            android:layout_marginTop="@dimen/signup_text_margin_top">
-            <EditText
-                style="@style/modifiedEditText"
-                android:inputType="text"
-                android:maxLines="1"
-                android:id="@+id/signUpName"
-                android:hint="Name"/>
-        </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginTop="@dimen/signup_text_margin_top"/>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/parent"
-            android:layout_marginTop="@dimen/signup_text_margin_top">
-            <EditText
-                style="@style/modifiedEditText"
-                android:inputType="text"
-                android:id="@+id/signUpMobile"
-                android:maxLines="1"
-                android:hint="Mobile Number"/>
-        </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginTop="@dimen/signup_text_margin_top"/>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/parent"
