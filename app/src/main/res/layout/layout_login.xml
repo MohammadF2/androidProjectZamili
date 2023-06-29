@@ -49,6 +49,7 @@
             android:layout_marginTop="5dp">
             <TextView
                 style="@style/modifiedEditText"
+                android:textColor="@color/red"
                 android:maxLines="1"
                 android:id="@+id/errorSignUp" />
         </com.google.android.material.textfield.TextInputLayout>

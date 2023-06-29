@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -29,6 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import edu.birzeit.androidprojectzamili.R;
@@ -39,8 +41,7 @@ import edu.birzeit.zamilihotal.model.User;
 
 public class MainActivity extends AppCompatActivity {
 
-
-    private TextView signUpFromSignIn;
+    private static TextView signUpFromSignIn;
     private TextView signInFromSignUp;
 
     FrameLayout container;
@@ -130,32 +131,39 @@ public class MainActivity extends AppCompatActivity {
         Button signUpB = findViewById(R.id.signUpB);
         EditText email = findViewById(R.id.signUpEmail);
 
-
+        EditText F_name = findViewById(R.id.signUpFname);
+        EditText L_name = findViewById(R.id.signUpLname);
+        EditText phone = findViewById(R.id.signUpPhoneNumber);
+        TextView error = findViewById(R.id.errorSignUp);
         EditText pass1 = findViewById(R.id.signUpPass);
         EditText pass2 = findViewById(R.id.repeatpass);
-        TextView error = findViewById(R.id.passwordNotEqual);
+
+
         signUpB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(F_name.getText().toString().equals("") || L_name.toString().equals("") || phone.toString().equals("") ||
+                        email.toString().equals("") || pass1.toString().equals("") || pass2.toString().equals("")){
+                    error.setText("all fields are required");
+                    return;
+                }
+
                 if(!pass1.getText().toString().equals(pass2.getText().toString())) {
                     error.setText("Both passwords should be the same");
                 } else {
-
-                    SharedPreferences sp = MainActivity.this.getSharedPreferences("main", Context.MODE_PRIVATE);
-                    if(sp.getString(email.getText().toString(), null) == null) {
-                        SignUpController controller = new SignUpController(new User(email.getText().toString(), pass1.getText().toString()), MainActivity.this);
-                        container.removeAllViews();
-                        getLayoutInflater().inflate(R.layout.layout_login, container, true);
-                        setSignUpFromSignIn();
-                    } else {
-                        error.setText("email already exits");
-                    }
+                        SignUpController controller = new SignUpController(new User(email.getText().toString(), pass1.getText().toString(), F_name.getText().toString(), L_name.getText().toString(), phone.getText().toString()),
+                                MainActivity.this, error);
+                        Log.d("controller.isSuccess()", controller.isSuccess() + "");
+                        if(controller.isSuccess()) {
+                            container.removeAllViews();
+                            getLayoutInflater().inflate(R.layout.layout_login, container, true);
+                            setSignUpFromSignIn();
+                        }
                 }
             }
         });
 
     }
-
-
 
 }

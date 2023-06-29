@@ -17,13 +17,15 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="edu.birzeit.zamilihotal.activitys.MainPageActivity"
             android:label="Main page" />
+        <activity
+            android:name="edu.birzeit.zamilihotal.activitys.RoomActivity"
+            android:label="Room page" />
     </application>
 
 </manifest>

@@ -33,6 +33,37 @@
             android:layout_marginTop="@dimen/signup_text_margin_top">
             <EditText
                 style="@style/modifiedEditText"
+                android:id="@+id/signUpFname"
+                android:maxLines="1"
+                android:hint="First name"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/parent"
+            android:layout_marginTop="@dimen/signup_text_margin_top">
+            <EditText
+                style="@style/modifiedEditText"
+                android:id="@+id/signUpLname"
+                android:maxLines="1"
+                android:hint="Last name"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/parent"
+            android:layout_marginTop="@dimen/signup_text_margin_top">
+            <EditText
+                style="@style/modifiedEditText"
+                android:id="@+id/signUpPhoneNumber"
+                android:inputType="number"
+                android:maxLines="1"
+                android:hint="Phone number"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/parent"
+            android:layout_marginTop="@dimen/signup_text_margin_top">
+            <EditText
+                style="@style/modifiedEditText"
                 android:inputType="textEmailAddress"
                 android:id="@+id/signUpEmail"
                 android:maxLines="1"
@@ -61,14 +92,14 @@
                 android:id="@+id/repeatpass"
                 android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
-
         <com.google.android.material.textfield.TextInputLayout
             style="@style/parent"
             android:layout_marginTop="5dp">
             <TextView
                 style="@style/modifiedEditText"
-                android:maxLines="1"
-                android:id="@+id/passwordNotEqual" />
+                android:textColor="@color/red"
+                android:maxLines="2"
+                android:id="@+id/errorSignUp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -76,7 +107,7 @@
             android:layout_marginTop="10dp"
             android:layout_gravity="center"
             android:id="@+id/signUpB"
-            android:text="Register" />
+            android:text="@string/register_tag" />
 
         <TextView
             style="@style/parent"

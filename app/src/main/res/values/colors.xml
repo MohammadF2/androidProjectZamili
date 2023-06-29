@@ -12,4 +12,15 @@
     <!--colros for card-->
     <color name="whiteCardColor">#fff</color>
 
+    <color name="purple_200">#7884FC</color>
+    <color name="purple_500">#7884FC</color>
+    <color name="purple_700">#f3bba2</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="red">#FF0000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="lavender">#7884FC</color>
+    <color name="bright_orange">#f3bba2</color>
+
 </resources>
