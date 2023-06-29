@@ -32,6 +32,7 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import edu.birzeit.androidprojectzamili.R;
 import edu.birzeit.zamilihotal.activitys.MainPageActivity;
@@ -142,24 +143,44 @@ public class MainActivity extends AppCompatActivity {
         signUpB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(F_name.getText().toString().equals("") || L_name.toString().equals("") || phone.toString().equals("") ||
-                        email.toString().equals("") || pass1.toString().equals("") || pass2.toString().equals("")){
+                if(F_name.getText().toString().equals("") || L_name.getText().toString().equals("") || phone.getText().toString().equals("") ||
+                        email.getText().toString().equals("") || pass1.getText().toString().equals("") || pass2.getText().toString().equals("")){
                     error.setText("all fields are required");
                     return;
                 }
-
                 if(!pass1.getText().toString().equals(pass2.getText().toString())) {
                     error.setText("Both passwords should be the same");
                 } else {
-                        SignUpController controller = new SignUpController(new User(email.getText().toString(), pass1.getText().toString(), F_name.getText().toString(), L_name.getText().toString(), phone.getText().toString()),
-                                MainActivity.this, error);
-                        Log.d("controller.isSuccess()", controller.isSuccess() + "");
-                        if(controller.isSuccess()) {
-                            container.removeAllViews();
-                            getLayoutInflater().inflate(R.layout.layout_login, container, true);
-                            setSignUpFromSignIn();
+                    String emailTXT = email.getText().toString();
+                    String password = pass2.getText().toString();
+                    DataBase.auth.createUserWithEmailAndPassword(emailTXT, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (!task.isSuccessful()) {
+                                error.setText(task.getException().getMessage());
+                            } else {
+                                Map<String, String> userAccount = new HashMap<>();
+                                userAccount.put("F_Name", F_name.getText().toString());
+                                userAccount.put("L_Name", L_name.getText().toString());
+                                userAccount.put("phone", phone.getText().toString());
+                                DataBase.database.collection("users").document(email.getText().toString()).set(userAccount).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Objects.requireNonNull(DataBase.auth.getCurrentUser()).delete();
+                                        error.setText(e.getMessage());
+                                    }
+                                }).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        container.removeAllViews();
+                                        getLayoutInflater().inflate(R.layout.layout_login, container, true);
+                                        setSignUpFromSignIn();
+                                    }
+                                });
+                            }
                         }
+                    });
+                    DataBase.auth.signOut();
                 }
             }
         });

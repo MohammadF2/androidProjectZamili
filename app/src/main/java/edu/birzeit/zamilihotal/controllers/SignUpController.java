@@ -46,6 +46,7 @@ public class SignUpController {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (!task.isSuccessful()) {
+                    isSuccess = false;
                     error.setText(task.getException().getMessage());
                 } else {
                     Map<String, String> userAccount = new HashMap<>();
