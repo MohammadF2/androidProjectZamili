@@ -1,0 +1,287 @@
+package edu.birzeit.zamilihotal.activitys;
+
+
+import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.icu.util.Calendar;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import edu.birzeit.androidprojectzamili.R;
+import edu.birzeit.zamilihotal.Data.DataBase;
+import edu.birzeit.zamilihotal.Data.Public;
+import edu.birzeit.zamilihotal.MainActivity;
+import edu.birzeit.zamilihotal.controllers.DateManager;
+import edu.birzeit.zamilihotal.model.Image;
+import edu.birzeit.zamilihotal.model.Reservation;
+import edu.birzeit.zamilihotal.model.Room;
+import edu.birzeit.zamilihotal.model.RoomType;
+
+public class SearchActivity extends AppCompatActivity {
+
+
+    DatePickerDialog datePickerDialog;
+    Button datePicker;
+    List<Room> roomList = new ArrayList<>();
+    EditText number;
+    List<Reservation> reservations = new ArrayList<>();
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
+        Public.context = this;
+        String[] types = {RoomType.DOUBLE_BED, RoomType.SINGLE_BED, RoomType.LARGE_BED};
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.my_spinner_style,types) {
+            public View getView(int position, View convertView,ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                ((TextView) v).setTextSize(16);
+                return v;
+            }
+            public View getDropDownView(int position, View convertView,ViewGroup parent) {
+                View v = super.getDropDownView(position, convertView,parent);
+                ((TextView) v).setGravity(Gravity.CENTER);
+                return v;
+            }
+        };
+
+        Spinner spinner = findViewById(R.id.type_spinner);
+        spinner.setAdapter(adapter);
+
+        Button logout = findViewById(R.id.logoutB_search);
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences sp = SearchActivity.this.getSharedPreferences("main", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                DataBase.auth.signOut();
+                editor.remove("currUser");
+                editor.commit();
+                Intent i = new Intent(SearchActivity.this, MainActivity.class);
+                startActivity(i);
+            }
+        });
+
+        setDatePickerDialog();
+
+        datePicker = findViewById(R.id.date_picker_actions);
+        datePicker.setText(DateManager.getTodayDate());
+
+        datePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePickerDialog.show();
+            }
+        });
+
+        number = findViewById(R.id.number_of_days);
+        Button search = findViewById(R.id.searchB);
+        TextView errorTxt = findViewById(R.id.errorSearch);
+
+
+        Log.d("isSelected", spinner.isSelected()+"");
+
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("isSelected", spinner.isSelected()+"");
+                if(number.getText().toString().equals("")) {
+                    errorTxt.setText("You must choose a number");
+                    return;
+                }
+
+
+              getReservations();
+              Handler handler = new Handler();
+              handler.postDelayed(new Runnable() {
+                  @Override
+                  public void run() {
+                      getRooms(spinner.getSelectedItem().toString());
+                  }
+              }, 300);
+
+            }
+        });
+
+    }
+
+
+    private void getReservations() {
+
+        Gson gson = new Gson();
+        String img_url = "https://mohammadf.site/Rest/getReservations.php";
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest request = new StringRequest(Request.Method.POST, img_url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Reservation[] reservationsArr = gson.fromJson(response, Reservation[].class);
+                        reservations = Arrays.asList(reservationsArr);
+                        Log.d("reservations 1", reservations.size() + "");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("error", error.getMessage());
+            }
+        });
+
+        queue.add(request);
+    }
+
+    List<Image> images = new ArrayList<>();
+
+    private void getRooms(String roomType) {
+        Gson gson = new Gson();
+        String img_url = "https://mohammadf.site/Rest/getRoomsType.php?roomType=" + roomType;
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest request = new StringRequest(Request.Method.GET, img_url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Room[] roomsArr = gson.fromJson(response, Room[].class);
+                        roomList = Arrays.asList(roomsArr);
+
+                        List<String> dates = DateManager.getNextNDays(datePicker.getText().toString(), Integer.parseInt(number.getText().toString()));
+                        SharedPreferences sp = SearchActivity.this.getSharedPreferences("main", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+
+                        editor.putString("startDate", datePicker.getText().toString());
+                        editor.putInt("numberOfDays", Integer.parseInt(number.getText().toString()));
+
+
+                        List<Room> filteredRooms = roomList.stream()
+                                .filter(room -> !reservations.stream()
+                                        .filter(reservation -> reservation.getRoomNo() == room.getRoomNo())
+                                        .anyMatch(reservation -> dates.contains(reservation.getDate())))
+                                .collect(Collectors.toList());
+
+
+
+//                        Log.d("number of rooms", roomsToShow.size() + "");
+
+
+                        for (int i = 0; i < filteredRooms.size(); i++) {
+                            String img_url = "https://mohammadf.site/Rest/getRoomImg.php";
+                            RequestQueue queue = Volley.newRequestQueue(Public.context);
+                            int finalI = i;
+                            StringRequest request = new StringRequest(Request.Method.POST, img_url,
+                                    new Response.Listener<String>() {
+                                        @Override
+                                        public void onResponse(String response) {
+                                            Log.d("imgs", response);
+                                            try {
+                                                Image[] imgArr = gson.fromJson(response, Image[].class);
+                                                images = Arrays.asList(imgArr);
+                                                filteredRooms.get(finalI).setImages(images);
+                                            } catch (Exception e) {
+
+                                            }
+                                        }
+                                    }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.d("error", error.getMessage());
+                                }
+                            }) {
+
+                                @Override
+                                protected Map<String, String> getParams() throws AuthFailureError {
+                                    Map<String, String > prems = new HashMap<>();
+                                    Log.d("roomNo", Integer.toString(filteredRooms.get(finalI).getRoomNo()));
+                                    prems.put("roomNo", Integer.toString(filteredRooms.get(finalI).getRoomNo()));
+                                    return prems;
+                                }
+                            };
+                            queue.add(request);
+                        }
+
+                        TextView textView = findViewById(R.id.searchMessage);
+                        textView.setText("Searching for rooms please wait");
+
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                Gson gson = new Gson();
+                                editor.putString("roomsToShow", gson.toJson(filteredRooms.toArray()));
+                                editor.putString("targetedDates", gson.toJson(dates.toArray()));
+                                editor.commit();
+                                Intent intent = new Intent(SearchActivity.this, MainPageActivity.class);
+                                startActivity(intent);
+                            }
+                        }, 2000);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("error", error.getMessage());
+            }
+        });
+        queue.add(request);
+    }
+
+    private void setDatePickerDialog() {
+        DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                month = month +1;
+                String date = DateManager.makeDateString(day, month, year);
+                datePicker.setText(date);
+            }
+        };
+
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        int style = AlertDialog.THEME_HOLO_DARK;
+
+        datePickerDialog = new DatePickerDialog(this, style, dateSetListener, year, month, day);
+    }
+
+    public void profileClick(MenuItem item) {
+    }
+    public void BookingClick(MenuItem item) {
+    }
+    public void SearchClick(MenuItem item) {
+    }
+}

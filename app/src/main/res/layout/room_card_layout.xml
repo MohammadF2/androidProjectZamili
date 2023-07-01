@@ -15,6 +15,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:id="@+id/room_card_ground"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -32,6 +33,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/room_card_floor"
                 android:fontFamily="@font/calibri"
                 android:text="3rd floor "
                 android:textColor="#000000" />
@@ -61,6 +63,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="100dp"
+                        android:id="@+id/room_card_img"
                         android:src="@drawable/king" />
 
 
@@ -79,6 +82,7 @@
                         android:drawableLeft="@drawable/ic_location_on_red_24dp"
                         android:drawablePadding="8dp"
                         android:fontFamily="@font/calibri"
+                        android:id="@+id/room_card_number"
                         android:gravity="center"
                         android:text="L305" />
 
@@ -88,6 +92,7 @@
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/ic_event_available_red_24dp"
                         android:drawablePadding="8dp"
+                        android:id="@+id/room_card_date"
                         android:fontFamily="@font/calibri"
                         android:gravity="center"
                         android:text="14 Jul - 21 Jul" />
@@ -97,6 +102,7 @@
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/baseline_star_24"
                         android:drawablePadding="8dp"
+                        android:id="@+id/room_card_rate"
                         android:fontFamily="@font/calibri"
                         android:gravity="center"
                         android:text="5/5" />
@@ -106,6 +112,7 @@
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/baseline_price_check_24"
                         android:drawablePadding="8dp"
+                        android:id="@+id/room_card_price"
                         android:fontFamily="@font/calibri"
                         android:gravity="center"
                         android:text="$125 / day" />

@@ -1,7 +1,6 @@
 package edu.birzeit.zamilihotal.model;
 
 public class Review {
-
     private User user;
     private String review;
     private double rate;

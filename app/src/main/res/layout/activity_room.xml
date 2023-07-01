@@ -16,38 +16,14 @@
         android:layout_marginBottom="0dp"
         android:orientation="vertical">
 
-        <HorizontalScrollView
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/imgRecycle"
+
+            android:orientation="horizontal"
             android:scrollbars="none">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8sp"
-                android:padding="12dp">
-
-                <ImageView
-                    android:layout_width="228dp"
-                    android:layout_height="150dp"
-                    android:layout_marginRight="4dp"
-                    android:src="@drawable/king" />
-
-                <ImageView
-                    android:layout_width="300dp"
-                    android:layout_height="150dp"
-                    android:layout_marginRight="4dp"
-                    android:src="@drawable/king" />
-
-                <ImageView
-                    android:layout_width="300dp"
-                    android:layout_height="150dp"
-                    android:layout_marginRight="4dp"
-                    android:src="@drawable/king" />
-
-            </LinearLayout>
-
-        </HorizontalScrollView>
+        </androidx.recyclerview.widget.RecyclerView>
 
         <TextView
             android:layout_width="match_parent"
@@ -55,6 +31,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:fontFamily="@font/calibri"
+            android:id="@+id/Room_title"
             android:text="King's room"
             android:textColor="#000000"
             android:textSize="18sp"
@@ -79,6 +56,7 @@
                     android:layout_height="60dp"
                     android:layout_marginRight="8dp"
                     android:layout_weight="25"
+                    android:id="@+id/firstImage"
                     android:scaleType="centerCrop"
                     android:src="@drawable/king" />
 
@@ -94,6 +72,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
                         android:fontFamily="@font/calibri"
+                        android:id="@+id/desc"
                         android:text="The is a big room for a man and his wife to enjoy a nice weekend"
                         android:textColor="#000000"
                         android:textSize="16sp" />
@@ -103,6 +82,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/calibri"
                         android:text="King's room"
+                        android:id="@+id/subTitle"
                         android:textSize="14sp" />
                 </LinearLayout>
 
@@ -137,6 +117,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
                         android:fontFamily="@font/calibri"
+                        android:id="@+id/room_price"
                         android:text="Price only 124.99$ a night"
                         android:textColor="#000000"
                         android:textSize="16sp" />
@@ -145,6 +126,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/calibri"
+                        android:id="@+id/room_date"
                         android:text="From 3 Jul to 8 Aug"
                         android:textSize="14sp" />
 
@@ -159,6 +141,7 @@
                     <Button
                         android:layout_width="139dp"
                         android:layout_gravity="center"
+                        android:id="@+id/resB"
                         android:layout_height="wrap_content"
                         android:text="Reserve" />
                 </LinearLayout>
@@ -212,7 +195,7 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/menuBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="68dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="0dp"
         app:menu="@menu/nav_menu" />

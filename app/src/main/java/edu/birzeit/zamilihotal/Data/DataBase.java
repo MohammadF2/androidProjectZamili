@@ -1,4 +1,4 @@
-package edu.birzeit.zamilihotal.database;
+package edu.birzeit.zamilihotal.Data;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;

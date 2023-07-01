@@ -8,37 +8,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.gson.Gson;
-
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
 
 import edu.birzeit.androidprojectzamili.R;
 import edu.birzeit.zamilihotal.activitys.MainPageActivity;
-import edu.birzeit.zamilihotal.controllers.SignUpController;
-import edu.birzeit.zamilihotal.database.DataBase;
-import edu.birzeit.zamilihotal.model.User;
+import edu.birzeit.zamilihotal.Data.DataBase;
+import edu.birzeit.zamilihotal.activitys.SearchActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -71,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
             getLayoutInflater().inflate(R.layout.layout_login, container, true);
             setSignUpFromSignIn();
         } else {
-            Intent intent = new Intent(MainActivity.this, MainPageActivity.class);
+            Intent intent = new Intent(MainActivity.this, SearchActivity.class);
             startActivity(intent);
             finish();
         }
@@ -97,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
                          @Override
                          public void onComplete(@NonNull Task<AuthResult> task) {
                              if(task.isSuccessful()) {
+                                saveUserOnSharedPrefs();
                                 Intent intent = new Intent(MainActivity.this, MainPageActivity.class);
                                 MainActivity.this.startActivity(intent);
                              } else {
@@ -114,6 +107,37 @@ public class MainActivity extends AppCompatActivity {
                 container.removeAllViews();
                 getLayoutInflater().inflate(R.layout.layout_register, container, true);
                 setSignInFromSignUp();
+            }
+        });
+    }
+
+
+    private void saveUserOnSharedPrefs() {
+        FirebaseUser u = DataBase.auth.getCurrentUser();
+        String url = "https://mohammadf.site/Rest/getUserData.php?user_email="+ u.getEmail();
+        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+        SharedPreferences sp = MainActivity.this.getSharedPreferences("main", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if(!response.equals("No user found with this email.")){
+                    Log.d("res", response);
+                    editor.putString("currUser", response);
+                    editor.commit();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("Error", error.getMessage());
+            }
+        });
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                queue.add(request);
             }
         });
     }
@@ -153,33 +177,34 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     String emailTXT = email.getText().toString();
                     String password = pass2.getText().toString();
+                    RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
                     DataBase.auth.createUserWithEmailAndPassword(emailTXT, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (!task.isSuccessful()) {
                                 error.setText(task.getException().getMessage());
                             } else {
-                                Map<String, String> userAccount = new HashMap<>();
-                                userAccount.put("F_Name", F_name.getText().toString());
-                                userAccount.put("L_Name", L_name.getText().toString());
-                                userAccount.put("phone", phone.getText().toString());
-                                DataBase.database.collection("users").document(email.getText().toString()).set(userAccount).addOnFailureListener(new OnFailureListener() {
+                                String url = "https://mohammadf.site/Rest/InsertUser.php?user_email="+email.getText().toString()+"&user_Fname="+F_name.getText().toString()
+                                        +"&user_Lname="+L_name.getText().toString()+"&user_phone="+phone.getText().toString();
+                                System.out.println(url);
+                                StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
                                     @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Objects.requireNonNull(DataBase.auth.getCurrentUser()).delete();
-                                        error.setText(e.getMessage());
-                                    }
-                                }).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
+                                    public void onResponse(String response) {
                                         container.removeAllViews();
                                         getLayoutInflater().inflate(R.layout.layout_login, container, true);
                                         setSignUpFromSignIn();
                                     }
+                                }, new Response.ErrorListener() {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error1) {
+                                        error.setText(error1.getMessage());
+                                    }
                                 });
+                                queue.add(stringRequest);
                             }
                         }
                     });
+
                     DataBase.auth.signOut();
                 }
             }
