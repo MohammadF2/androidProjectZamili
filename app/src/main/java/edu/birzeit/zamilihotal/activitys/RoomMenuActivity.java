@@ -55,7 +55,6 @@ public class RoomMenuActivity extends AppCompatActivity {
         User usr = gson.fromJson(res, User.class);
 
 
-        DataBase.auth.sendPasswordResetEmail(DataBase.auth.getCurrentUser().getEmail());
 
         List<Room> roomList = Arrays.asList(gson.fromJson(sp.getString("roomsToShow", "nan"), Room[].class));
 
