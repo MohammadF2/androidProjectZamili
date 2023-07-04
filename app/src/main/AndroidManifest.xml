@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="edu.birzeit.zamilihotal.activitys.MainPageActivity"
+            android:name="edu.birzeit.zamilihotal.activitys.RoomMenuActivity"
             android:label="Main page" />
         <activity
             android:name="edu.birzeit.zamilihotal.activitys.SearchActivity"

@@ -5,7 +5,6 @@ public class Review {
     private String review;
     private double rate;
 
-
     public Review(User user, String review, double rate) {
         this.user = user;
         this.review = review;

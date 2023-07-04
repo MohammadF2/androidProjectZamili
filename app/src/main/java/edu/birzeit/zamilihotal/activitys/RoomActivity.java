@@ -57,77 +57,57 @@ public class RoomActivity extends AppCompatActivity {
         SharedPreferences sp = this.getSharedPreferences("main", Context.MODE_PRIVATE);
         String target = sp.getString("target", "fake");
 
-        if(target.equals("fake")) {
-            FirebaseUser u = DataBase.auth.getCurrentUser();
-            User user = new User(u.getEmail(), "123", "Mohammad", "Faraj", u.getPhoneNumber());
-            List<Review> reviews = new ArrayList<>();
-            reviews.add(new Review(user, "review", 1));
-            reviews.add(new Review(user, "review", 1));
-            reviews.add(new Review(user, "review", 1));
-            reviews.add(new Review(user, "review", 1));
-            reviews.add(new Review(user, "review", 1));
-            reviews.add(new Review(user, "review", 1));
 
-            RecyclerView recyclerView = findViewById(R.id.reviewsRecycler);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-            recyclerView.setAdapter(new ReviewAdapter(this, reviews));
-        } else {
-            FirebaseUser u = DataBase.auth.getCurrentUser();
-            Gson g = new Gson();
-            Room room = g.fromJson(target, Room.class);
-            User user = new User(u.getEmail(), "123", "Mohammad", "Faraj", u.getPhoneNumber());
-            List<Review> reviews = new ArrayList<>();
-            reviews.add(new Review(user, "review", 1));
-            reviews.add(new Review(user, "review", 1));
-            reviews.add(new Review(user, "review", 1));
-            reviews.add(new Review(user, "review", 1));
-            reviews.add(new Review(user, "review", 1));
-            reviews.add(new Review(user, "review", 1));
+        Gson g = new Gson();
+        Room room = g.fromJson(target, Room.class);
+        FirebaseUser user = DataBase.auth.getCurrentUser();
 
-            RecyclerView recyclerView = findViewById(R.id.imgRecycle);
-            recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-            recyclerView.setAdapter(new ImageAdapter(this, room.getImages()));
+        RecyclerView recyclerView = findViewById(R.id.imgRecycle);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setAdapter(new ImageAdapter(this, room.getImages()));
 
 
 
-            TextView roomTitle = findViewById(R.id.Room_title);
-            ImageView firstImg = findViewById(R.id.firstImage);
-            TextView desc = findViewById(R.id.desc);
-            TextView subTitle = findViewById(R.id.subTitle);
-            TextView price =  findViewById(R.id.room_price);
-            TextView date = findViewById(R.id.room_date);
-            Button res = findViewById(R.id.resB);
+        TextView roomTitle = findViewById(R.id.Room_title);
+        ImageView firstImg = findViewById(R.id.firstImage);
+        TextView desc = findViewById(R.id.desc);
+        TextView subTitle = findViewById(R.id.subTitle);
+        TextView price =  findViewById(R.id.room_price);
+        TextView date = findViewById(R.id.room_date);
+        Button res = findViewById(R.id.resB);
 
-            roomTitle.setText(room.getRoomType());
-            desc.setText(room.getDescription());
+        roomTitle.setText(room.getRoomType());
+        desc.setText(room.getDescription());
 //            new DownloadImageTask(firstImg).execute(room.getImages().get(0).getImgURL());
-            subTitle.setText(room.getRoomType());
-            price.setText("Price only " + room.getPrice() + "$ a night");
-            String startDate =sp.getString("startDate", "Jul 1 2023");
-            date.setText( startDate + " - " + DateManager.getLastDate(startDate, sp.getInt("numberOfDays", 1)));
+        subTitle.setText(room.getRoomType());
+        price.setText("Price only " + room.getPrice() + "$ a night");
+        String startDate =sp.getString("startDate", "Jul 1 2023");
+        date.setText( startDate + " - " + DateManager.getLastDate(startDate, sp.getInt("numberOfDays", 1)));
 
-            Gson gson = new Gson();
+        Gson gson = new Gson();
 
-            res.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        res.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
 
-                    Log.d("Clicked", "the reserve button got clicked");
+                Log.d("Clicked", "the reserve button got clicked");
 
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(RoomActivity.this, "A reservation has been added to you", Toast.LENGTH_SHORT).show();
-                        }
-                    }, 2000);
-                    List<String> dates = Arrays.asList(gson.fromJson(sp.getString("targetedDates", "null"), String[].class));
-                    reserve(dates, room.getRoomNo(), user.getEmail());
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(RoomActivity.this, "A reservation has been added to you", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(RoomActivity.this, SearchActivity.class);
+                        startActivity(intent);
+                    }
+                }, 2000);
+                List<String> dates = Arrays.asList(gson.fromJson(sp.getString("targetedDates", "null"), String[].class));
+                reserve(dates, room.getRoomNo(), user.getEmail());
 
-                }
-            });
-        }
+            }
+        });
+
     }
 
 

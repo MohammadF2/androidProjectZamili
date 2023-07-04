@@ -81,15 +81,15 @@
 
                         <TextView
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="48dp"
                             android:layout_marginLeft="20dp"
-                            android:layout_marginBottom="4dp"
                             android:layout_marginTop="15dp"
+                            android:layout_marginBottom="4dp"
                             android:drawablePadding="8dp"
-                            app:drawableLeftCompat="@drawable/baseline_bedroom_parent_24"
                             android:fontFamily="@font/calibri"
                             android:gravity="center"
-                            android:text="Choose room type:" />
+                            android:text="Choose room type:"
+                            app:drawableLeftCompat="@drawable/baseline_bedroom_parent_24" />
 
                         <View
                             android:layout_width="match_parent"
@@ -140,13 +140,14 @@
 
 
                         <Spinner
-                            android:layout_width="180dp"
-                            android:layout_height="40dp"
-                            android:layout_marginBottom="4dp"
-                            android:layout_gravity="center"
-                            android:drawablePadding="8dp"
                             android:id="@+id/type_spinner"
+                            android:layout_width="194dp"
+                            android:layout_height="64dp"
+                            android:layout_gravity="center"
                             android:layout_marginTop="5dp"
+
+                            android:layout_marginBottom="4dp"
+                            android:drawablePadding="8dp"
                             android:fontFamily="@font/calibri"
                             android:gravity="center" />
 

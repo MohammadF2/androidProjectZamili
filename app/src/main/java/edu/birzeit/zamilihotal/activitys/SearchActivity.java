@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import edu.birzeit.zamilihotal.adabter.SpinnerAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -36,7 +37,6 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -50,6 +50,7 @@ import edu.birzeit.zamilihotal.model.Image;
 import edu.birzeit.zamilihotal.model.Reservation;
 import edu.birzeit.zamilihotal.model.Room;
 import edu.birzeit.zamilihotal.model.RoomType;
+import edu.birzeit.zamilihotal.model.SpinnerItem;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -80,8 +81,15 @@ public class SearchActivity extends AppCompatActivity {
             }
         };
 
+        List<SpinnerItem> spinnerItems = new ArrayList<>();
+        spinnerItems.add(new SpinnerItem(R.drawable.baseline_bedroom_child_24, RoomType.SINGLE_BED));
+        spinnerItems.add(new SpinnerItem(R.drawable.baseline_bedroom_parent_24, RoomType.DOUBLE_BED));
+        spinnerItems.add(new SpinnerItem(R.drawable.baseline_bedroom_parent_24, RoomType.LARGE_BED));
+
+        SpinnerAdapter adapter1 = new SpinnerAdapter(this, spinnerItems);
+
         Spinner spinner = findViewById(R.id.type_spinner);
-        spinner.setAdapter(adapter);
+        spinner.setAdapter(adapter1);
 
         Button logout = findViewById(R.id.logoutB_search);
 
@@ -97,6 +105,9 @@ public class SearchActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+
+
 
         setDatePickerDialog();
 
@@ -132,7 +143,7 @@ public class SearchActivity extends AppCompatActivity {
               handler.postDelayed(new Runnable() {
                   @Override
                   public void run() {
-                      getRooms(spinner.getSelectedItem().toString());
+                      getRooms(((SpinnerItem) spinner.getSelectedItem()).getText());
                   }
               }, 300);
 
@@ -243,7 +254,7 @@ public class SearchActivity extends AppCompatActivity {
                                 editor.putString("roomsToShow", gson.toJson(filteredRooms.toArray()));
                                 editor.putString("targetedDates", gson.toJson(dates.toArray()));
                                 editor.commit();
-                                Intent intent = new Intent(SearchActivity.this, MainPageActivity.class);
+                                Intent intent = new Intent(SearchActivity.this, RoomMenuActivity.class);
                                 startActivity(intent);
                             }
                         }, 2000);

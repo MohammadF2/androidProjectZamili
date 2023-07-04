@@ -28,14 +28,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
 
 import edu.birzeit.androidprojectzamili.R;
-import edu.birzeit.zamilihotal.activitys.MainPageActivity;
 import edu.birzeit.zamilihotal.Data.DataBase;
 import edu.birzeit.zamilihotal.activitys.SearchActivity;
 
 public class MainActivity extends AppCompatActivity {
-
-    private static TextView signUpFromSignIn;
-    private TextView signInFromSignUp;
 
     FrameLayout container;
 
@@ -53,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         setSignUpFromSignIn();
 
     }
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -68,10 +63,8 @@ public class MainActivity extends AppCompatActivity {
             finish();
         }
     }
-
     private void setSignUpFromSignIn() {
-        signUpFromSignIn = findViewById(R.id.signUpFromSignIn);
-
+         TextView signUpFromSignIn = findViewById(R.id.signUpFromSignIn);
          EditText email = findViewById(R.id.editTextEmail);
          EditText password = findViewById(R.id.editTextPassword);
          TextView error = findViewById(R.id.errorSignUp);
@@ -90,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                          public void onComplete(@NonNull Task<AuthResult> task) {
                              if(task.isSuccessful()) {
                                 saveUserOnSharedPrefs();
-                                Intent intent = new Intent(MainActivity.this, MainPageActivity.class);
+                                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                                 MainActivity.this.startActivity(intent);
                              } else {
                                  error.setText("Email or password are wrong");
@@ -100,8 +93,7 @@ public class MainActivity extends AppCompatActivity {
                  }
              }
          });
-
-        signUpFromSignIn.setOnClickListener(new View.OnClickListener() {
+         signUpFromSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 container.removeAllViews();
@@ -110,8 +102,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
     private void saveUserOnSharedPrefs() {
         FirebaseUser u = DataBase.auth.getCurrentUser();
         String url = "https://mohammadf.site/Rest/getUserData.php?user_email="+ u.getEmail();
@@ -141,9 +131,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
     private void setSignInFromSignUp() {
-        signInFromSignUp = findViewById(R.id.signInFromSignUp);
+        TextView signInFromSignUp = findViewById(R.id.signInFromSignUp);
         signInFromSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
