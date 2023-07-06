@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        style="@style/loginButton"
+        android:background="#60BFB8" />
+
+
+    <ImageView
+        android:id="@+id/profilePicture"
+        android:layout_width="190dp"
+        android:layout_height="150dp"
+        android:layout_marginLeft="110dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/circle_background"
+        android:padding="4dp"
+        android:src="@mipmap/profile_icon_foreground" />
+
+
+    <ImageView
+        android:id="@+id/pinIcon"
+        android:layout_width="40dp"
+        android:layout_height="60dp"
+        android:layout_alignBottom="@id/profilePicture"
+        android:layout_alignEnd="@id/profilePicture"
+        android:src="@mipmap/pin_icon_background_foreground"
+        android:onClick="changeProfilePicture" />
+
+
+    <TextView
+        android:id="@+id/usernameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profilePicture"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="User Name"
+        android:textSize="40dp"
+        android:textColor="#0A514B" />
+
+
+
+    <Button
+        android:id="@+id/changeInfoButton"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_below="@id/profilePicture"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="111dp"
+        android:textSize="16dp"
+        android:layout_marginEnd="30dp"
+        android:onClick="editPersonalInfo"
+        android:text="Edit Personal Information" />
+
+    <Button
+        android:id="@+id/changePassword"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_below="@id/changeInfoButton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="30dp"
+        android:textSize="16dp"
+        android:onClick="changePassword"
+        android:text="Change Password" />
+
+
+    <Button
+        android:id="@+id/deleteAccountButton"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_below="@id/changePassword"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="30dp"
+        android:textSize="16dp"
+        android:onClick="deleteAccount"
+        android:text="Delete Account" />
+
+
+    <Button
+        android:id="@+id/logoutButton"
+        android:layout_width="120dp"
+        android:layout_height="70dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="17dp"
+        android:layout_marginBottom="90dp"
+        android:onClick="logout"
+        android:text="Logout" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/menuBar"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="0dp"
+        app:menu="@menu/nav_menu" />
+
+</RelativeLayout>
