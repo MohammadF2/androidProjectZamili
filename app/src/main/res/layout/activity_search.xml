@@ -43,7 +43,6 @@
             android:layout_width="match_parent"
             android:layout_height="610dp"
             android:fitsSystemWindows="true"
-            android:onClick="card_roomClicked"
             android:orientation="vertical"
             app:cardCornerRadius="4dp"
             app:cardUseCompatPadding="true"

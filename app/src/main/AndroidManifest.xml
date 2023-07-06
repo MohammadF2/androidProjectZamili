@@ -32,6 +32,10 @@
         <activity
             android:name="edu.birzeit.zamilihotal.activitys.RoomActivity"
             android:label="Room page" />
+
+        <activity
+            android:name="edu.birzeit.zamilihotal.activitys.BookingActivity"
+            android:label="Booking Activity" />
     </application>
 
 </manifest>

@@ -29,6 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import edu.birzeit.androidprojectzamili.R;
 import edu.birzeit.zamilihotal.Data.DataBase;
+import edu.birzeit.zamilihotal.activitys.BookingActivity;
 import edu.birzeit.zamilihotal.activitys.SearchActivity;
 
 public class MainActivity extends AppCompatActivity {

@@ -28,6 +28,10 @@ import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -90,9 +94,6 @@ public class RoomActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-
-                Log.d("Clicked", "the reserve button got clicked");
-
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
@@ -102,6 +103,8 @@ public class RoomActivity extends AppCompatActivity {
                         startActivity(intent);
                     }
                 }, 2000);
+
+
                 List<String> dates = Arrays.asList(gson.fromJson(sp.getString("targetedDates", "null"), String[].class));
                 reserve(dates, room.getRoomNo(), user.getEmail());
 
@@ -111,40 +114,77 @@ public class RoomActivity extends AppCompatActivity {
     }
 
 
+    int max;
+
     private void reserve(List<String> dates, int roomNo, String userEmail) {
-        for (int i = 0; i < dates.size(); i++) {
-            Gson gson = new Gson();
-            String img_url = "https://mohammadf.site/Rest/addReservation.php";
-            RequestQueue queue = Volley.newRequestQueue(Public.context);
-            int finalI = i;
-            StringRequest request = new StringRequest(Request.Method.POST, img_url,
-                    new Response.Listener<String>() {
+
+        RequestQueue queue = Volley.newRequestQueue(Public.context);
+        StringRequest request1 = new StringRequest(Request.Method.POST, "https://mohammadf.site/Rest/getMaxRes.php", new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONArray jsonArray = null;
+                try {
+                    jsonArray = new JSONArray(response);
+                    JSONObject jsonObject = jsonArray.getJSONObject(0);
+                    Log.d("jsonObject.getInt(\"MAX(id)\")", String.valueOf(jsonObject.getInt("MAX(id)")));
+                    max = jsonObject.getInt("MAX(id)") + 1;
+                } catch (JSONException e) {
+                    max = 1;
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        queue.add(request1);
+
+        Handler handler = new Handler();
+
+
+        Log.d("dates", max + "");
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < dates.size(); i++) {
+                    String img_url = "https://mohammadf.site/Rest/addReservation.php";
+                    int finalI = i;
+                    StringRequest request = new StringRequest(Request.Method.POST, img_url,
+                            new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+                                }
+                            }, new Response.ErrorListener() {
                         @Override
-                        public void onResponse(String response) {
-                            Log.d("res", response);
+                        public void onErrorResponse(VolleyError error) {
+                            Log.d("error", error.getMessage());
                         }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("error", error.getMessage());
+                    }) {
+                        @Override
+                        protected Map<String, String> getParams() throws AuthFailureError {
+                            Map<String, String > prems = new HashMap<>();
+                            prems.put("roomNo", Integer.toString(roomNo));
+                            prems.put("userEmail", userEmail);
+                            prems.put("Date", dates.get(finalI));
+                            Log.d("String.valueOf(max)", String.valueOf(max));
+                            prems.put("ReservationNum", String.valueOf(max));
+                            return prems;
+                        }
+                    };
+                    queue.add(request);
                 }
-            }) {
-                @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    Map<String, String > prems = new HashMap<>();
-                    prems.put("roomNo", Integer.toString(roomNo));
-                    prems.put("userEmail", userEmail);
-                    prems.put("Date", dates.get(finalI));
-                    return prems;
-                }
-            };
-            queue.add(request);
-        }
+            }
+        }, 700);
     }
 
     public void profileClick(MenuItem item) {
     }
     public void BookingClick(MenuItem item) {
+        Intent intent = new Intent(RoomActivity.this, BookingActivity.class);
+        startActivity(intent);
     }
     public void SearchClick(MenuItem item) {
         Intent intent = new Intent(RoomActivity.this, SearchActivity.class);

@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import edu.birzeit.zamilihotal.adabter.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -125,12 +126,13 @@ public class SearchActivity extends AppCompatActivity {
         Button search = findViewById(R.id.searchB);
         TextView errorTxt = findViewById(R.id.errorSearch);
 
-
-        Log.d("isSelected", spinner.isSelected()+"");
-
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                TextView textView = findViewById(R.id.searchMessage);
+                textView.setText("Searching for rooms please wait");
+
                 Log.d("isSelected", spinner.isSelected()+"");
                 if(number.getText().toString().equals("")) {
                     errorTxt.setText("You must choose a number");
@@ -179,6 +181,9 @@ public class SearchActivity extends AppCompatActivity {
     List<Image> images = new ArrayList<>();
 
     private void getRooms(String roomType) {
+        TextView textView = findViewById(R.id.searchMessage);
+        textView.setText("Searching for rooms please wait");
+
         Gson gson = new Gson();
         String img_url = "https://mohammadf.site/Rest/getRoomsType.php?roomType=" + roomType;
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -197,11 +202,28 @@ public class SearchActivity extends AppCompatActivity {
                         editor.putInt("numberOfDays", Integer.parseInt(number.getText().toString()));
 
 
-                        List<Room> filteredRooms = roomList.stream()
-                                .filter(room -> !reservations.stream()
-                                        .filter(reservation -> reservation.getRoomNo() == room.getRoomNo())
-                                        .anyMatch(reservation -> dates.contains(reservation.getDate())))
-                                .collect(Collectors.toList());
+
+                        List<Room> filteredRooms = new ArrayList<>();
+
+                        for (Room room : roomList) {
+                            boolean isReserved = false;
+                            for (Reservation reservation : reservations) {
+                                if (reservation.getRoomNo() == room.getRoomNo()) {
+                                    isReserved = true;
+                                    break;
+                                }
+                            }
+                            if (!isReserved) {
+                                filteredRooms.add(room);
+                            }
+                        }
+
+
+//                        List<Room> filteredRooms = roomList.stream()
+//                                .filter(room -> !reservations.stream()
+//                                        .filter(reservation -> reservation.getRoomNo() == room.getRoomNo())
+//                                        .anyMatch(reservation -> dates.contains(reservation.getDate())))
+//                                .collect(Collectors.toList());
 
 
 
@@ -243,21 +265,26 @@ public class SearchActivity extends AppCompatActivity {
                             queue.add(request);
                         }
 
-                        TextView textView = findViewById(R.id.searchMessage);
-                        textView.setText("Searching for rooms please wait");
+
 
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                Gson gson = new Gson();
-                                editor.putString("roomsToShow", gson.toJson(filteredRooms.toArray()));
-                                editor.putString("targetedDates", gson.toJson(dates.toArray()));
-                                editor.commit();
-                                Intent intent = new Intent(SearchActivity.this, RoomMenuActivity.class);
-                                startActivity(intent);
+
+                                if(filteredRooms.size() == 0){
+                                    Toast.makeText(SearchActivity.this, "No rooms available", Toast.LENGTH_SHORT).show();
+                                    textView.setText("No rooms available");
+                                } else {
+                                    Gson gson = new Gson();
+                                    editor.putString("roomsToShow", gson.toJson(filteredRooms.toArray()));
+                                    editor.putString("targetedDates", gson.toJson(dates.toArray()));
+                                    editor.commit();
+                                    Intent intent = new Intent(SearchActivity.this, RoomMenuActivity.class);
+                                    startActivity(intent);
+                                }
                             }
-                        }, 2000);
+                        }, 2500);
 
                     }
                 }, new Response.ErrorListener() {
@@ -292,6 +319,8 @@ public class SearchActivity extends AppCompatActivity {
     public void profileClick(MenuItem item) {
     }
     public void BookingClick(MenuItem item) {
+        Intent intent = new Intent(SearchActivity.this, BookingActivity.class);
+        startActivity(intent);
     }
     public void SearchClick(MenuItem item) {
     }

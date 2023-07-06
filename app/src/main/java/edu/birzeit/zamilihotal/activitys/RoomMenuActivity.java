@@ -93,6 +93,8 @@ public class RoomMenuActivity extends AppCompatActivity {
     public void profileClick(MenuItem item) {
     }
     public void BookingClick(MenuItem item) {
+        Intent intent = new Intent(RoomMenuActivity.this, BookingActivity.class);
+        startActivity(intent);
     }
     public void SearchClick(MenuItem item) {
         Intent intent = new Intent(RoomMenuActivity.this, SearchActivity.class);
