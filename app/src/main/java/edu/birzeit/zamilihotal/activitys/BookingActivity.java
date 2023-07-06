@@ -31,9 +31,10 @@ public class BookingActivity extends AppCompatActivity {
 
 
     public void profileClick(MenuItem item) {
+        Intent intent = new Intent(BookingActivity.this, ProfileActivity.class);
+        startActivity(intent);
     }
     public void BookingClick(MenuItem item) {
-
     }
     public void SearchClick(MenuItem item) {
         Intent intent = new Intent(BookingActivity.this, SearchActivity.class);
