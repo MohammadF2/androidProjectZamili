@@ -5,10 +5,19 @@ public class Reservation {
     private String userEmail;
     private String reservationDate;
 
+    private String isRated;
+
     public Reservation(int roomNo, String userEmail, String date) {
         this.roomId = roomNo;
         this.userEmail = userEmail;
         this.reservationDate = date;
+    }
+
+    public Reservation(int roomNo, String userEmail, String date, String isRated) {
+        this.roomId = roomNo;
+        this.userEmail = userEmail;
+        this.reservationDate = date;
+        this.isRated = isRated;
     }
 
     public int getRoomNo() {

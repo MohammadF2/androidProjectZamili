@@ -154,18 +154,26 @@ public class SearchActivity extends AppCompatActivity {
 
                     List<Room> filteredRooms = new ArrayList<>();
 
+
+
                     for (Room room : roomList) {
                         boolean isReserved = false;
                         for (Reservation reservation : reservations) {
                             if (reservation.getRoomNo() == room.getRoomNo()) {
-                                isReserved = true;
-                                break;
+                                for (String date :dates) {
+                                    if(date.equals(reservation.getDate())) {
+                                        isReserved = true;
+                                        break;
+                                    }
+                                }
                             }
                         }
                         if (!isReserved) {
                             filteredRooms.add(room);
                         }
                     }
+
+                    Log.d("filteredRooms", filteredRooms.size() + "");
 
                     for (int i = 0; i < filteredRooms.size(); i++) {
                         String img_url1 = "https://mohammadf.site/Rest/getRoomImg.php";
