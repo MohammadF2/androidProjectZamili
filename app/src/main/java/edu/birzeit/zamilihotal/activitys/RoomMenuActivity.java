@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Button;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,21 +46,7 @@ public class RoomMenuActivity extends AppCompatActivity {
         }
 
 
-
-
         List<Room> roomList = Arrays.asList(gson.fromJson(sp.getString("roomsToShow", "nan"), Room[].class));
-
-        Button logout = findViewById(R.id.logoutB);
-        logout.setOnClickListener(v -> {
-            DataBase.auth.signOut();
-            editor.remove("currUser");
-            editor.apply();
-            Intent i = new Intent(RoomMenuActivity.this, MainActivity.class);
-            startActivity(i);
-        });
-
-
-
 
 
         RecyclerView recyclerView = findViewById(R.id.RoomsRecycler);

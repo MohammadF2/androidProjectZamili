@@ -67,10 +67,14 @@ public class RoomLayoutRecyclerViewAdapter extends RecyclerView.Adapter<RoomCard
         Handler handler = new Handler();
         handler.postDelayed(() -> {
 
-            if (rates[position].length() > 3) {
-                holder.room_card_rate.setText(rates[position].substring(0, 3) + "/5");
-            } else {
-                holder.room_card_rate.setText(rates[position] + "/5");
+            try {
+                if (rates[position].length() > 3) {
+                    holder.room_card_rate.setText(rates[position].substring(0, 3) + "/5");
+                } else {
+                    holder.room_card_rate.setText(rates[position] + "/5");
+                }
+            } catch (Exception e) {
+                holder.room_card_rate.setText("5.0/5");
             }
         }, 1000);
         holder.room_card_price.setText(rooms.get(position).getPrice() + "$ / day");

@@ -69,18 +69,6 @@ public class SearchActivity extends AppCompatActivity {
         Spinner spinner = findViewById(R.id.type_spinner);
         spinner.setAdapter(adapter1);
 
-        Button logout = findViewById(R.id.logoutB_search);
-
-        logout.setOnClickListener(v -> {
-            SharedPreferences sp = SearchActivity.this.getSharedPreferences("main", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sp.edit();
-            DataBase.auth.signOut();
-            editor.remove("currUser");
-            editor.apply();
-            Intent i = new Intent(SearchActivity.this, MainActivity.class);
-            startActivity(i);
-        });
-
 
 
 
@@ -213,6 +201,7 @@ public class SearchActivity extends AppCompatActivity {
                             Gson gson1 = new Gson();
                             editor.putString("roomsToShow", gson1.toJson(filteredRooms.toArray()));
                             editor.putString("targetedDates", gson1.toJson(dates.toArray()));
+                            textView.setText("");
                             editor.apply();
                             Intent intent = new Intent(SearchActivity.this, RoomMenuActivity.class);
                             startActivity(intent);

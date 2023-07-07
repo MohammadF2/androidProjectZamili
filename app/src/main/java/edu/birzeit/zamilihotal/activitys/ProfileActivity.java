@@ -1,6 +1,8 @@
 package edu.birzeit.zamilihotal.activitys;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -62,5 +64,16 @@ public class ProfileActivity extends AppCompatActivity {
             }
         };
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
+    }
+
+
+    public void logout(View view) {
+        SharedPreferences sp = ProfileActivity.this.getSharedPreferences("main", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        DataBase.auth.signOut();
+        editor.remove("currUser");
+        editor.apply();
+        Intent i = new Intent(ProfileActivity.this, MainActivity.class);
+        startActivity(i);
     }
 }
