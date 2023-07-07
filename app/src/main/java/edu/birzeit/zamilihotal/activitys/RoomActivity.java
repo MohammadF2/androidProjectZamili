@@ -20,37 +20,30 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 import edu.birzeit.androidprojectzamili.R;
 import edu.birzeit.zamilihotal.Data.Public;
-import edu.birzeit.zamilihotal.MainActivity;
 import edu.birzeit.zamilihotal.adabter.ImageAdapter;
 import edu.birzeit.zamilihotal.adabter.ReviewAdapter;
 import edu.birzeit.zamilihotal.controllers.DateManager;
-import edu.birzeit.zamilihotal.controllers.DownloadImageTask;
 import edu.birzeit.zamilihotal.Data.DataBase;
-import edu.birzeit.zamilihotal.model.Image;
+import edu.birzeit.zamilihotal.controllers.VolleySingleton;
 import edu.birzeit.zamilihotal.model.Review;
 import edu.birzeit.zamilihotal.model.Room;
-import edu.birzeit.zamilihotal.model.User;
+
 
 public class RoomActivity extends AppCompatActivity {
 
@@ -60,8 +53,6 @@ public class RoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room);
         SharedPreferences sp = this.getSharedPreferences("main", Context.MODE_PRIVATE);
         String target = sp.getString("target", "fake");
-
-
         Gson g = new Gson();
         Room room = g.fromJson(target, Room.class);
         FirebaseUser user = DataBase.auth.getCurrentUser();
@@ -72,14 +63,17 @@ public class RoomActivity extends AppCompatActivity {
 
 
 
+
         TextView roomTitle = findViewById(R.id.Room_title);
         ImageView firstImg = findViewById(R.id.firstImage);
         TextView desc = findViewById(R.id.desc);
         TextView subTitle = findViewById(R.id.subTitle);
         TextView price =  findViewById(R.id.room_price);
         TextView date = findViewById(R.id.room_date);
+        TextView roomNo = findViewById(R.id.room_No);
         Button res = findViewById(R.id.resB);
 
+        roomNo.setText("Room No: " + room.getRoomNo());
         roomTitle.setText(room.getRoomType());
         desc.setText(room.getDescription());
 //            new DownloadImageTask(firstImg).execute(room.getImages().get(0).getImgURL());
@@ -89,6 +83,10 @@ public class RoomActivity extends AppCompatActivity {
         date.setText( startDate + " - " + DateManager.getLastDate(startDate, sp.getInt("numberOfDays", 1)));
 
         Gson gson = new Gson();
+
+
+        loadReviews(room.getRoomNo());
+
 
         res.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,6 +108,31 @@ public class RoomActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void loadReviews(int roomNo) {
+
+        String link = "https://mohammadf.site/Rest/getReviews.php?roomNo=" + roomNo;
+
+        Log.d("link", link);
+        StringRequest request = new StringRequest(Request.Method.GET, link, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Gson gson = new Gson();
+                Log.d("response", response);
+                List<Review> reviews = Arrays.asList(gson.fromJson(response, Review[].class));
+                RecyclerView recyclerView = findViewById(R.id.reviewsRecycler);
+                recyclerView.setLayoutManager(new LinearLayoutManager(RoomActivity.this, LinearLayoutManager.VERTICAL, false));
+                recyclerView.setAdapter(new ReviewAdapter(RoomActivity.this, reviews));
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        VolleySingleton.getInstance(this).addToRequestQueue(request);
 
     }
 
@@ -118,7 +141,7 @@ public class RoomActivity extends AppCompatActivity {
 
     private void reserve(List<String> dates, int roomNo, String userEmail) {
 
-        RequestQueue queue = Volley.newRequestQueue(Public.context);
+
         StringRequest request1 = new StringRequest(Request.Method.POST, "https://mohammadf.site/Rest/getMaxRes.php", new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -138,8 +161,8 @@ public class RoomActivity extends AppCompatActivity {
 
             }
         });
+        VolleySingleton.getInstance(this).addToRequestQueue(request1);
 
-        queue.add(request1);
 
         Handler handler = new Handler();
 
@@ -174,13 +197,15 @@ public class RoomActivity extends AppCompatActivity {
                             return prems;
                         }
                     };
-                    queue.add(request);
+                    VolleySingleton.getInstance(Public.context).addToRequestQueue(request);
                 }
             }
         }, 700);
     }
 
     public void profileClick(MenuItem item) {
+        Intent intent = new Intent(RoomActivity.this, ProfileActivity.class);
+        startActivity(intent);
     }
     public void BookingClick(MenuItem item) {
         Intent intent = new Intent(RoomActivity.this, BookingActivity.class);

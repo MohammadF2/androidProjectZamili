@@ -19,6 +19,7 @@ import edu.birzeit.androidprojectzamili.R;
 import edu.birzeit.zamilihotal.Data.DataBase;
 import edu.birzeit.zamilihotal.Data.Public;
 import edu.birzeit.zamilihotal.MainActivity;
+import edu.birzeit.zamilihotal.controllers.VolleySingleton;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -29,6 +30,8 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void profileClick(MenuItem item) {
+        Intent intent = new Intent(ProfileActivity.this, ProfileActivity.class);
+        startActivity(intent);
     }
     public void BookingClick(MenuItem item) {
         Intent intent = new Intent(ProfileActivity.this, BookingActivity.class);
@@ -61,7 +64,6 @@ public class ProfileActivity extends AppCompatActivity {
                 return params;
             }
         };
-        RequestQueue queue = Volley.newRequestQueue(ProfileActivity.this);
-        queue.add(stringRequest);
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
 }

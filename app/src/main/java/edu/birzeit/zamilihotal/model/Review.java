@@ -1,22 +1,33 @@
 package edu.birzeit.zamilihotal.model;
 
 public class Review {
-    private User user;
+    private String userEmail;
+
+    private int roomNo;
     private String review;
     private double rate;
 
-    public Review(User user, String review, double rate) {
-        this.user = user;
+    public Review(String userEmail, int roomNo, String review, double rate) {
+        this.userEmail = userEmail;
+        this.roomNo = roomNo;
         this.review = review;
         this.rate = rate;
     }
 
-    public User getUser() {
-        return user;
+    public String getUserEmail() {
+        return userEmail;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
+    }
+
+    public int getRoomNo() {
+        return roomNo;
+    }
+
+    public void setRoomNo(int roomNo) {
+        this.roomNo = roomNo;
     }
 
     public String getReview() {

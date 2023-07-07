@@ -28,11 +28,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
+
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -40,13 +40,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
 
 import edu.birzeit.androidprojectzamili.R;
 import edu.birzeit.zamilihotal.Data.DataBase;
 import edu.birzeit.zamilihotal.Data.Public;
 import edu.birzeit.zamilihotal.MainActivity;
 import edu.birzeit.zamilihotal.controllers.DateManager;
+import edu.birzeit.zamilihotal.controllers.VolleySingleton;
 import edu.birzeit.zamilihotal.model.Image;
 import edu.birzeit.zamilihotal.model.Reservation;
 import edu.birzeit.zamilihotal.model.Room;
@@ -159,7 +160,6 @@ public class SearchActivity extends AppCompatActivity {
 
         Gson gson = new Gson();
         String img_url = "https://mohammadf.site/Rest/getReservations.php";
-        RequestQueue queue = Volley.newRequestQueue(this);
         StringRequest request = new StringRequest(Request.Method.POST, img_url,
                 new Response.Listener<String>() {
                     @Override
@@ -174,8 +174,7 @@ public class SearchActivity extends AppCompatActivity {
                 Log.d("error", error.getMessage());
             }
         });
-
-        queue.add(request);
+        VolleySingleton.getInstance(this).addToRequestQueue(request);
     }
 
     List<Image> images = new ArrayList<>();
@@ -186,7 +185,6 @@ public class SearchActivity extends AppCompatActivity {
 
         Gson gson = new Gson();
         String img_url = "https://mohammadf.site/Rest/getRoomsType.php?roomType=" + roomType;
-        RequestQueue queue = Volley.newRequestQueue(this);
         StringRequest request = new StringRequest(Request.Method.GET, img_url,
                 new Response.Listener<String>() {
                     @Override
@@ -232,7 +230,6 @@ public class SearchActivity extends AppCompatActivity {
 
                         for (int i = 0; i < filteredRooms.size(); i++) {
                             String img_url = "https://mohammadf.site/Rest/getRoomImg.php";
-                            RequestQueue queue = Volley.newRequestQueue(Public.context);
                             int finalI = i;
                             StringRequest request = new StringRequest(Request.Method.POST, img_url,
                                     new Response.Listener<String>() {
@@ -262,7 +259,7 @@ public class SearchActivity extends AppCompatActivity {
                                     return prems;
                                 }
                             };
-                            queue.add(request);
+                            VolleySingleton.getInstance(Public.context).addToRequestQueue(request);
                         }
 
 
@@ -284,7 +281,7 @@ public class SearchActivity extends AppCompatActivity {
                                     startActivity(intent);
                                 }
                             }
-                        }, 2500);
+                        }, 3000);
 
                     }
                 }, new Response.ErrorListener() {
@@ -293,7 +290,7 @@ public class SearchActivity extends AppCompatActivity {
                 Log.d("error", error.getMessage());
             }
         });
-        queue.add(request);
+        VolleySingleton.getInstance(this).addToRequestQueue(request);
     }
 
     private void setDatePickerDialog() {
@@ -325,5 +322,7 @@ public class SearchActivity extends AppCompatActivity {
         startActivity(intent);
     }
     public void SearchClick(MenuItem item) {
+        Intent intent = new Intent(SearchActivity.this, SearchActivity.class);
+        startActivity(intent);
     }
 }

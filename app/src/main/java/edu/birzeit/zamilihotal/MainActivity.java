@@ -1,9 +1,7 @@
 package edu.birzeit.zamilihotal;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,23 +13,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseUser;
-
 import edu.birzeit.androidprojectzamili.R;
 import edu.birzeit.zamilihotal.Data.DataBase;
-import edu.birzeit.zamilihotal.activitys.BookingActivity;
-import edu.birzeit.zamilihotal.activitys.ProfileActivity;
 import edu.birzeit.zamilihotal.activitys.SearchActivity;
+import edu.birzeit.zamilihotal.controllers.VolleySingleton;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -107,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     private void saveUserOnSharedPrefs() {
         FirebaseUser u = DataBase.auth.getCurrentUser();
         String url = "https://mohammadf.site/Rest/getUserData.php?user_email="+ u.getEmail();
-        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+
         SharedPreferences sp = MainActivity.this.getSharedPreferences("main", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -129,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                queue.add(request);
+                VolleySingleton.getInstance(MainActivity.this).addToRequestQueue(request);
             }
         });
     }
@@ -168,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     String emailTXT = email.getText().toString();
                     String password = pass2.getText().toString();
-                    RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+
                     DataBase.auth.createUserWithEmailAndPassword(emailTXT, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -191,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
                                         error.setText(error1.getMessage());
                                     }
                                 });
-                                queue.add(stringRequest);
+                                VolleySingleton.getInstance(MainActivity.this).addToRequestQueue(stringRequest);
                             }
                         }
                     });

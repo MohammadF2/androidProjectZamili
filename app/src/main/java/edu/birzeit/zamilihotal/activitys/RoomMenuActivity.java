@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -58,8 +59,6 @@ public class RoomMenuActivity extends AppCompatActivity {
 
         List<Room> roomList = Arrays.asList(gson.fromJson(sp.getString("roomsToShow", "nan"), Room[].class));
 
-
-
         Button logout = findViewById(R.id.logoutB);
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,23 +71,13 @@ public class RoomMenuActivity extends AppCompatActivity {
             }
         });
 
+
+
+
+
         RecyclerView recyclerView = findViewById(R.id.RoomsRecycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(new RoomLayoutRecyclerViewAdapter(this, roomList));
-    }
-
-    public void card_roomClicked(View v) {
-        TextView textView = findViewById(R.id.room_card_title);
-        String target = textView.getContentDescription().toString();
-
-        Gson gson = new Gson();
-        SharedPreferences sp = this.getSharedPreferences("main", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString("target", target);
-        editor.commit();
-        Intent intent = new Intent(RoomMenuActivity.this, RoomActivity.class);
-        startActivity(intent);
-
     }
     public void profileClick(MenuItem item) {
         Intent intent = new Intent(RoomMenuActivity.this, ProfileActivity.class);

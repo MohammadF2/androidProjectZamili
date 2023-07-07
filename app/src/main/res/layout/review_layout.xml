@@ -12,6 +12,7 @@
         android:fontFamily="@font/calibri"
         android:text="Name: Mohammad Faraj"
         android:textColor="#000000"
+        android:id="@+id/review_name"
         android:maxLines="1"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -25,6 +26,7 @@
         android:drawableLeft="@drawable/baseline_star_24"
         android:text="Rate 4.5/5"
         android:textColor="#000000"
+        android:id="@+id/review_rate"
         android:maxLines="1"
         android:textSize="18sp"
         android:textStyle="bold" />
@@ -34,6 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginEnd="16dp"
+        android:id="@+id/review_text"
         android:fontFamily="@font/calibri"
         android:text="This is only an example for a room review "
         android:textColor="#000000"

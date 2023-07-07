@@ -129,6 +129,13 @@
                         android:id="@+id/room_date"
                         android:text="From 3 Jul to 8 Aug"
                         android:textSize="14sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/calibri"
+                        android:id="@+id/room_No"
+                        android:text="Room number: R125"
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 

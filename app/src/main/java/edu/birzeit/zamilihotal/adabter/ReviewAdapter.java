@@ -31,6 +31,9 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewViewer>{
 
     @Override
     public void onBindViewHolder(@NonNull ReviewViewer holder, int position) {
+        holder.review_name.setText(reviews.get(position).getUserEmail());
+        holder.review_text.setText(reviews.get(position).getReview());
+        holder.review_rate.setText(reviews.get(position).getRate() + "/5");
     }
 
     @Override
