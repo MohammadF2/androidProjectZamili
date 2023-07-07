@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="250dp"
         style="@style/loginButton"
-        android:background="#60BFB8" />
+        android:background="#6ACAC3" />
 
 
     <ImageView
@@ -40,16 +40,14 @@
         android:layout_below="@id/profilePicture"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text="User Name"
         android:textSize="40dp"
         android:textColor="#0A514B" />
-
 
 
     <Button
         android:id="@+id/changeInfoButton"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="60dp"
         android:layout_below="@id/profilePicture"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="30dp"
@@ -62,7 +60,7 @@
     <Button
         android:id="@+id/changePassword"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="60dp"
         android:layout_below="@id/changeInfoButton"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="30dp"
@@ -76,7 +74,7 @@
     <Button
         android:id="@+id/deleteAccountButton"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="60dp"
         android:layout_below="@id/changePassword"
         android:layout_marginStart="30dp"
         android:layout_marginTop="11dp"
@@ -89,7 +87,7 @@
     <Button
         android:id="@+id/logoutButton"
         android:layout_width="120dp"
-        android:layout_height="70dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:textSize="17dp"
