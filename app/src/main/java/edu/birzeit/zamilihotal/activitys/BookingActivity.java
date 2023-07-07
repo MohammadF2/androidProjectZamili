@@ -21,8 +21,8 @@ public class BookingActivity extends AppCompatActivity {
 
         // Get the ViewPager and set it's PagerAdapter so that it can display items
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
-        viewPager.setAdapter(new FragmentPagerAdapterP(getSupportFragmentManager(),
-                BookingActivity.this));
+        viewPager.setAdapter(new FragmentPagerAdapterP(getSupportFragmentManager()
+        ));
 
         // Give the TabLayout the ViewPager
         TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);

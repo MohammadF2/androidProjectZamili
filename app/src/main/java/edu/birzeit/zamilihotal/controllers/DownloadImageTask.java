@@ -1,5 +1,6 @@
 package edu.birzeit.zamilihotal.controllers;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import java.io.InputStream;
 
 public class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+    @SuppressLint("StaticFieldLeak")
     ImageView bmImage;
     public DownloadImageTask(ImageView bmImage) {
         this.bmImage = bmImage;

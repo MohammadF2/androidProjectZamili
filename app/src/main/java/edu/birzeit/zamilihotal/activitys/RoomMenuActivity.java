@@ -4,11 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,17 +19,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import edu.birzeit.androidprojectzamili.R;
+import edu.birzeit.zamilihotal.Data.DataBase;
 import edu.birzeit.zamilihotal.MainActivity;
 import edu.birzeit.zamilihotal.adabter.RoomLayoutRecyclerViewAdapter;
-import edu.birzeit.zamilihotal.Data.DataBase;
-import edu.birzeit.zamilihotal.model.Hotel;
 import edu.birzeit.zamilihotal.model.Room;
-import edu.birzeit.zamilihotal.model.User;
 
 
 public class RoomMenuActivity extends AppCompatActivity {
-
-    Hotel hotel = new Hotel("Zamili Hotel", "Ramallah", "Palestine", 5);
 
     Gson gson = new Gson();
 
@@ -47,28 +41,23 @@ public class RoomMenuActivity extends AppCompatActivity {
         if (user == null) {
             Intent i = new Intent(RoomMenuActivity.this, MainActivity.class);
             editor.remove("currUser");
-            editor.commit();
+            editor.apply();
             startActivity(i);
             finish();
         }
 
-        String res = sp.getString("currUser", "null");
-        User usr = gson.fromJson(res, User.class);
 
 
 
         List<Room> roomList = Arrays.asList(gson.fromJson(sp.getString("roomsToShow", "nan"), Room[].class));
 
         Button logout = findViewById(R.id.logoutB);
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DataBase.auth.signOut();
-                editor.remove("currUser");
-                editor.commit();
-                Intent i = new Intent(RoomMenuActivity.this, MainActivity.class);
-                startActivity(i);
-            }
+        logout.setOnClickListener(v -> {
+            DataBase.auth.signOut();
+            editor.remove("currUser");
+            editor.apply();
+            Intent i = new Intent(RoomMenuActivity.this, MainActivity.class);
+            startActivity(i);
         });
 
 

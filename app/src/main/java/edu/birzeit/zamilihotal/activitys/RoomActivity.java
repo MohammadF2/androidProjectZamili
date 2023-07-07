@@ -1,15 +1,15 @@
 package edu.birzeit.zamilihotal.activitys;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.os.Handler;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,10 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
@@ -35,11 +32,11 @@ import java.util.List;
 import java.util.Map;
 
 import edu.birzeit.androidprojectzamili.R;
+import edu.birzeit.zamilihotal.Data.DataBase;
 import edu.birzeit.zamilihotal.Data.Public;
 import edu.birzeit.zamilihotal.adabter.ImageAdapter;
 import edu.birzeit.zamilihotal.adabter.ReviewAdapter;
 import edu.birzeit.zamilihotal.controllers.DateManager;
-import edu.birzeit.zamilihotal.Data.DataBase;
 import edu.birzeit.zamilihotal.controllers.VolleySingleton;
 import edu.birzeit.zamilihotal.model.Review;
 import edu.birzeit.zamilihotal.model.Room;
@@ -47,6 +44,7 @@ import edu.birzeit.zamilihotal.model.Room;
 
 public class RoomActivity extends AppCompatActivity {
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,25 +86,20 @@ public class RoomActivity extends AppCompatActivity {
         loadReviews(room.getRoomNo());
 
 
-        res.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        res.setOnClickListener(v -> {
 
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(RoomActivity.this, "A reservation has been added to you", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(RoomActivity.this, SearchActivity.class);
-                        startActivity(intent);
-                    }
-                }, 2000);
+            Handler handler = new Handler();
+            handler.postDelayed(() -> {
+                Toast.makeText(RoomActivity.this, "A reservation has been added to you", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(RoomActivity.this, SearchActivity.class);
+                startActivity(intent);
+            }, 2000);
 
 
-                List<String> dates = Arrays.asList(gson.fromJson(sp.getString("targetedDates", "null"), String[].class));
-                reserve(dates, room.getRoomNo(), user.getEmail());
+            List<String> dates = Arrays.asList(gson.fromJson(sp.getString("targetedDates", "null"), String[].class));
+            assert user != null;
+            reserve(dates, room.getRoomNo(), user.getEmail());
 
-            }
         });
     }
 
@@ -115,21 +108,15 @@ public class RoomActivity extends AppCompatActivity {
         String link = "https://mohammadf.site/Rest/getReviews.php?roomNo=" + roomNo;
 
         Log.d("link", link);
-        StringRequest request = new StringRequest(Request.Method.GET, link, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Gson gson = new Gson();
-                Log.d("response", response);
-                List<Review> reviews = Arrays.asList(gson.fromJson(response, Review[].class));
-                RecyclerView recyclerView = findViewById(R.id.reviewsRecycler);
-                recyclerView.setLayoutManager(new LinearLayoutManager(RoomActivity.this, LinearLayoutManager.VERTICAL, false));
-                recyclerView.setAdapter(new ReviewAdapter(RoomActivity.this, reviews));
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
+        StringRequest request = new StringRequest(Request.Method.GET, link, response -> {
+            Gson gson = new Gson();
+            Log.d("response", response);
+            List<Review> reviews = Arrays.asList(gson.fromJson(response, Review[].class));
+            RecyclerView recyclerView = findViewById(R.id.reviewsRecycler);
+            recyclerView.setLayoutManager(new LinearLayoutManager(RoomActivity.this, LinearLayoutManager.VERTICAL, false));
+            recyclerView.setAdapter(new ReviewAdapter(RoomActivity.this, reviews));
+        }, error -> {
 
-            }
         });
 
         VolleySingleton.getInstance(this).addToRequestQueue(request);
@@ -142,24 +129,18 @@ public class RoomActivity extends AppCompatActivity {
     private void reserve(List<String> dates, int roomNo, String userEmail) {
 
 
-        StringRequest request1 = new StringRequest(Request.Method.POST, "https://mohammadf.site/Rest/getMaxRes.php", new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                JSONArray jsonArray = null;
-                try {
-                    jsonArray = new JSONArray(response);
-                    JSONObject jsonObject = jsonArray.getJSONObject(0);
-                    Log.d("jsonObject.getInt(\"MAX(id)\")", String.valueOf(jsonObject.getInt("MAX(id)")));
-                    max = jsonObject.getInt("MAX(id)") + 1;
-                } catch (JSONException e) {
-                    max = 1;
-                }
+        StringRequest request1 = new StringRequest(Request.Method.POST, "https://mohammadf.site/Rest/getMaxRes.php", response -> {
+            JSONArray jsonArray;
+            try {
+                jsonArray = new JSONArray(response);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+                Log.d("jsonObject.getInt(\"MAX(id)\")", String.valueOf(jsonObject.getInt("MAX(id)")));
+                max = jsonObject.getInt("MAX(id)") + 1;
+            } catch (JSONException e) {
+                max = 1;
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
+        }, error -> {
 
-            }
         });
         VolleySingleton.getInstance(this).addToRequestQueue(request1);
 
@@ -169,36 +150,25 @@ public class RoomActivity extends AppCompatActivity {
 
         Log.d("dates", max + "");
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < dates.size(); i++) {
-                    String img_url = "https://mohammadf.site/Rest/addReservation.php";
-                    int finalI = i;
-                    StringRequest request = new StringRequest(Request.Method.POST, img_url,
-                            new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                }
-                            }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.d("error", error.getMessage());
-                        }
-                    }) {
-                        @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
-                            Map<String, String > prems = new HashMap<>();
-                            prems.put("roomNo", Integer.toString(roomNo));
-                            prems.put("userEmail", userEmail);
-                            prems.put("Date", dates.get(finalI));
-                            Log.d("String.valueOf(max)", String.valueOf(max));
-                            prems.put("ReservationNum", String.valueOf(max));
-                            return prems;
-                        }
-                    };
-                    VolleySingleton.getInstance(Public.context).addToRequestQueue(request);
-                }
+        handler.postDelayed(() -> {
+            for (int i = 0; i < dates.size(); i++) {
+                String img_url = "https://mohammadf.site/Rest/addReservation.php";
+                int finalI = i;
+                StringRequest request = new StringRequest(Request.Method.POST, img_url,
+                        response -> {
+                        }, error -> Log.d("error", error.getMessage())) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String > rems = new HashMap<>();
+                        rems.put("roomNo", Integer.toString(roomNo));
+                        rems.put("userEmail", userEmail);
+                        rems.put("Date", dates.get(finalI));
+                        Log.d("String.valueOf(max)", String.valueOf(max));
+                        rems.put("ReservationNum", String.valueOf(max));
+                        return rems;
+                    }
+                };
+                VolleySingleton.getInstance(Public.context).addToRequestQueue(request);
             }
         }, 700);
     }

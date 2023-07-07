@@ -1,10 +1,6 @@
 package edu.birzeit.zamilihotal.controllers;
 
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.icu.util.Calendar;
-import android.util.Log;
-import android.widget.DatePicker;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;

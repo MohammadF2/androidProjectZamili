@@ -1,7 +1,5 @@
 package edu.birzeit.zamilihotal.adabter;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -12,12 +10,10 @@ import edu.birzeit.zamilihotal.fragment.Booking_Fragment;
 
 public class FragmentPagerAdapterP extends FragmentPagerAdapter {
     final int PAGE_COUNT = 2;
-    private String tabTitles[] = new String[] { "Active", "Past"};
-    private Context context;
+    private final String[] tabTitles = new String[] { "Active", "Past"};
 
-    public FragmentPagerAdapterP(FragmentManager fm, Context context) {
+    public FragmentPagerAdapterP(FragmentManager fm) {
         super(fm);
-        this.context = context;
     }
 
     @Override

@@ -1,17 +1,16 @@
 package edu.birzeit.zamilihotal.adabter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
-
 import edu.birzeit.androidprojectzamili.R;
 import edu.birzeit.zamilihotal.model.Review;
-import edu.birzeit.zamilihotal.model.Room;
+
 
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewViewer>{
 
@@ -29,6 +28,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewViewer>{
         return new ReviewViewer(LayoutInflater.from(context).inflate(R.layout.review_layout, parent, false));
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ReviewViewer holder, int position) {
         holder.review_name.setText(reviews.get(position).getUserEmail());

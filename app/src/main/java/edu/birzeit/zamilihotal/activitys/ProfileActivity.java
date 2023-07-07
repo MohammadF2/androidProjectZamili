@@ -9,15 +9,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 import java.util.Objects;
 
 import edu.birzeit.androidprojectzamili.R;
 import edu.birzeit.zamilihotal.Data.DataBase;
-import edu.birzeit.zamilihotal.Data.Public;
 import edu.birzeit.zamilihotal.MainActivity;
 import edu.birzeit.zamilihotal.controllers.VolleySingleton;
 
@@ -60,7 +57,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             protected java.util.Map<String, String> getParams() {
                 java.util.Map<String, String> params = new java.util.HashMap<>();
-                params.put("email", DataBase.auth.getCurrentUser().getEmail());
+                params.put("email", Objects.requireNonNull(DataBase.auth.getCurrentUser()).getEmail());
                 return params;
             }
         };

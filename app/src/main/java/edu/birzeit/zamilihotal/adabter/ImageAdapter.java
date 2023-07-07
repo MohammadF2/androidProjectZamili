@@ -7,19 +7,18 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import edu.birzeit.androidprojectzamili.R;
 import edu.birzeit.zamilihotal.controllers.DownloadImageTask;
 import edu.birzeit.zamilihotal.model.Image;
-import edu.birzeit.zamilihotal.model.Review;
+
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageViewer>{
 
 
     Context context;
-    List<Image> images = new ArrayList<>();
+    List<Image> images;
 
 
     public ImageAdapter(Context context, List<Image> images) {
