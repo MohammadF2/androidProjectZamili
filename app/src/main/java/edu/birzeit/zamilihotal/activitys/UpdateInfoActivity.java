@@ -1,8 +1,10 @@
 package edu.birzeit.zamilihotal.activitys;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,22 +14,25 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.Gson;
 
 import edu.birzeit.androidprojectzamili.R;
 import edu.birzeit.zamilihotal.Data.DataBase;
+import edu.birzeit.zamilihotal.MainActivity;
+import edu.birzeit.zamilihotal.controllers.VolleySingleton;
 import edu.birzeit.zamilihotal.model.User;
 
 public class UpdateInfoActivity extends AppCompatActivity {
     private EditText firstNameEditText, lastNameEditText, emailEditText, phoneNumberEditText;
     private Button updateButton;
-    private User currentUser;
     private boolean changesMade = false;
 
     @Override
@@ -42,16 +47,50 @@ public class UpdateInfoActivity extends AppCompatActivity {
         phoneNumberEditText = findViewById(R.id.phoneNumberEditText);
         updateButton = findViewById(R.id.updateButton);
 
-        // Retrieve the current user object from shared preferences
-        currentUser = getCurrentUserFromSharedPrefs();
+        // Retrieve the current user object from Firebase Authentication
+        FirebaseUser currentUser = DataBase.auth.getCurrentUser();
+        Gson gson = new Gson();
 
-        // Populate the EditText fields with the current user's information
-        if (currentUser != null) {
-            firstNameEditText.setText(currentUser.getF_Name());
-            lastNameEditText.setText(currentUser.getL_Name());
-            emailEditText.setText(currentUser.getEmail());
-            phoneNumberEditText.setText(currentUser.getPhone_number());
-        }
+        String url = "https://mohammadf.site/Rest/getUserData.php?user_email="+ currentUser.getEmail();
+
+
+        StringRequest request = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if(!response.equals("No user found with this email.")){
+                    User usr = gson.fromJson(response, User.class);
+                    String email = currentUser.getEmail();
+                    String firstName = usr.getF_Name();
+                    String lastName = usr.getL_Name(); // Replace this with the code to fetch the last name
+                    String phoneNumber = usr.getPhone_number(); // Replace this with the code to fetch the phone number
+
+                    // Set the email, first name, last name, and phone number fields with the user's information
+                    emailEditText.setText(email);
+                    firstNameEditText.setText(firstName);
+                    lastNameEditText.setText(lastName);
+                    phoneNumberEditText.setText(phoneNumber);
+
+                }
+
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("Error", error.getMessage());
+
+            }
+
+        });
+
+        VolleySingleton.getInstance(this).addToRequestQueue(request);
+
+
+
+
+
+
+
 
         // Set a click listener for the update button
         updateButton.setOnClickListener(new View.OnClickListener() {
@@ -64,7 +103,7 @@ public class UpdateInfoActivity extends AppCompatActivity {
                 String updatedPhoneNumber = phoneNumberEditText.getText().toString().trim();
 
                 // Create a new User object with the updated information
-                User updatedUser = new User(updatedEmail, currentUser.getPassword(), updatedFirstName, updatedLastName, updatedPhoneNumber);
+                User updatedUser = new User(updatedEmail, "", updatedFirstName, updatedLastName, updatedPhoneNumber);
 
                 // Update the user information
                 updateUserInformation(updatedUser);
@@ -76,53 +115,15 @@ public class UpdateInfoActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                onBackPressed();
+                checkChangesAndConfirmExit();
             }
         });
     }
 
-
     @Override
     public void onBackPressed() {
-        if (changesMade) {
-            showConfirmationDialog();
-        } else {
-            super.onBackPressed();
-        }
+        checkChangesAndConfirmExit();
     }
-
-    private User getCurrentUserFromSharedPrefs() {
-        SharedPreferences sp = getSharedPreferences("main", MODE_PRIVATE);
-        String userData = sp.getString("currUser", null);
-        if (userData != null) {
-            try {
-                JSONObject userObj = new JSONObject(userData);
-                String email = userObj.getString("email");
-                String firstName = userObj.getString("f_Name");
-                String lastName = userObj.getString("l_Name");
-                String phoneNumber = userObj.getString("phone_number");
-
-                // Retrieve the password from Firebase or from the user profile data
-                String password = ""; // Replace this with the code to fetch the password
-
-                // Set the email field with the user's email
-                emailEditText.setText(email);
-                firstNameEditText.setText(firstName);
-                lastNameEditText.setText(lastName);
-                phoneNumberEditText.setText(phoneNumber);
-
-                return new User(email, password, firstName, lastName, phoneNumber);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-
-
-
-
 
     private void updateUserInformation(User updatedUser) {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -139,7 +140,8 @@ public class UpdateInfoActivity extends AppCompatActivity {
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
                                                     Toast.makeText(UpdateInfoActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
-                                                    onBackPressed();
+                                                    // Return to the profile page
+                                                    finish();
                                                 } else {
                                                     Toast.makeText(UpdateInfoActivity.this, "Failed to update profile: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                                 }
@@ -166,4 +168,18 @@ public class UpdateInfoActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancel", null);
         builder.show();
     }
+
+    private void checkChangesAndConfirmExit() {
+        String updatedFirstName = firstNameEditText.getText().toString().trim();
+        String updatedLastName = lastNameEditText.getText().toString().trim();
+        String updatedEmail = emailEditText.getText().toString().trim();
+        String updatedPhoneNumber = phoneNumberEditText.getText().toString().trim();
+
+        if (changesMade || !updatedFirstName.isEmpty() || !updatedLastName.isEmpty() || !updatedEmail.isEmpty() || !updatedPhoneNumber.isEmpty()) {
+            showConfirmationDialog();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
 }
