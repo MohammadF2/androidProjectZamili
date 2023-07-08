@@ -1,9 +1,11 @@
 package edu.birzeit.zamilihotal.controllers;
 
 import android.icu.util.Calendar;
+import android.util.Log;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -45,7 +47,23 @@ public class DateManager {
         return dates;
     }
 
+
+    /*
+    Jul 5 2000
+    2
+
+    Jul 5 2000
+    Jul 6 2000
+     */
+
     public static String getLastDate(String dateString, int n) {
+
+        if(n == 1) {
+            return dateString;
+        }
+
+        Log.d("DateManager", dateString + " " + n);
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d yyyy", Locale.ENGLISH);
         LocalDate start = LocalDate.parse(dateString, formatter);
 
@@ -57,6 +75,18 @@ public class DateManager {
 
 
         return dates.get(dates.size() - 1);
+    }
+
+
+    public static boolean isDateInPast(String dateString) throws DateTimeParseException {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM d yyyy", Locale.US);
+
+        LocalDate date = LocalDate.parse(dateString, formatter);
+
+        LocalDate today = LocalDate.now();
+
+        return today.isAfter(date);
     }
 
 }

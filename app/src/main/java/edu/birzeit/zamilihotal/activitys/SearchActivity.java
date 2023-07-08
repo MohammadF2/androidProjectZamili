@@ -63,14 +63,9 @@ public class SearchActivity extends AppCompatActivity {
         spinnerItems.add(new SpinnerItem(R.drawable.baseline_bedroom_child_24, RoomType.SINGLE_BED));
         spinnerItems.add(new SpinnerItem(R.drawable.baseline_bedroom_parent_24, RoomType.DOUBLE_BED));
         spinnerItems.add(new SpinnerItem(R.drawable.baseline_bedroom_parent_24, RoomType.LARGE_BED));
-
         SpinnerAdapter adapter1 = new SpinnerAdapter(this, spinnerItems);
-
         Spinner spinner = findViewById(R.id.type_spinner);
         spinner.setAdapter(adapter1);
-
-
-
 
         setDatePickerDialog();
 
@@ -93,7 +88,6 @@ public class SearchActivity extends AppCompatActivity {
                 errorTxt.setText("You must choose a number");
                 return;
             }
-
 
           getReservations();
           Handler handler = new Handler();
