@@ -139,8 +139,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, deleteAccountLink,
                 response -> {
-                    Objects.requireNonNull(DataBase.auth.getCurrentUser()).delete()
-                            .addOnCompleteListener(task -> {
+                    Objects.requireNonNull(DataBase.auth.getCurrentUser()).delete().addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
                                     DataBase.auth.signOut();
                                     Intent intent = new Intent(ProfileActivity.this, MainActivity.class);

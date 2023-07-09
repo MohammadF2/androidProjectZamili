@@ -40,7 +40,7 @@ public class UpdatePasswordActivity extends AppCompatActivity {
         changePasswordButton = findViewById(R.id.updateButton);
          backpasswordButton = findViewById(R.id.backpasswordButton);
 
-        // Set a click listener for the change password button
+
         changePasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -48,7 +48,7 @@ public class UpdatePasswordActivity extends AppCompatActivity {
             }
         });
 
-        // Add a listener to the back button
+
         backpasswordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,16 +102,14 @@ public class UpdatePasswordActivity extends AppCompatActivity {
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            // Verify the user's current password
+
             AuthCredential credential = EmailAuthProvider.getCredential(user.getEmail(), currentPassword);
-            user.reauthenticate(credential)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+            user.reauthenticate(credential).addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                // Current password is correct, update the password
-                                user.updatePassword(newPassword)
-                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                                user.updatePassword(newPassword).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
@@ -123,7 +121,7 @@ public class UpdatePasswordActivity extends AppCompatActivity {
                                             }
                                         });
                             } else {
-                                // Current password is incorrect
+
                                 currentPasswordEditText.setError("Incorrect current password");
                                 currentPasswordEditText.requestFocus();
                             }
