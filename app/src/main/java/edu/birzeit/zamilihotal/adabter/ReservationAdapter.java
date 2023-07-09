@@ -2,6 +2,7 @@ package edu.birzeit.zamilihotal.adabter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
@@ -23,6 +25,8 @@ import java.util.Map;
 
 import edu.birzeit.androidprojectzamili.R;
 import edu.birzeit.zamilihotal.Data.DataBase;
+import edu.birzeit.zamilihotal.activitys.UpdateInfoActivity;
+import edu.birzeit.zamilihotal.controllers.DateManager;
 import edu.birzeit.zamilihotal.controllers.VolleySingleton;
 import edu.birzeit.zamilihotal.model.Reservation;
 import edu.birzeit.zamilihotal.model.Review;
@@ -56,11 +60,35 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationViewer>{
 
         //Log.d("test11", reservations.get(position).getIsRated());
 
+        if(DateManager.isDateInPast(reservations.get(position).getDate())) {
+            holder.canceled.setClickable(false);
+            holder.canceled.setText("Past Reservation");
+            holder.canceled.setBackgroundColor(context.getResources().getColor(R.color.red));
+        } else {
+            holder.canceled.setOnClickListener(v -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                builder.setTitle("Confirm Exit");
+                builder.setMessage("Are you sure you want to cancel the reservation?");
+                builder.setPositiveButton("Back", null);
+                builder.setNegativeButton("Cancel", (dialogInterface, i) -> {
+                    String link = "https://mohammadf.site/Rest/cancelRes.php?ReservationNum=" + reservations.get(position).getReservationNum();
+                    StringRequest stringRequest = new StringRequest(link, response -> {
+                        Log.e("response", response);
+                    }, error -> {
+                        Log.e("error", error.getMessage());
+                    });
+                    VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
+                    holder.canceled.setClickable(false);
+                    holder.canceled.setText("Canceled");
+                    holder.canceled.setBackgroundColor(context.getResources().getColor(R.color.red));
+                });
+                builder.show();
+            });
+        }
 
         if(!reservations.get(position).getIsRated().equals("1")){
             holder.user_room_submit.setClickable(true);
             holder.user_room_submit.setText("Submit");
-
             holder.user_room_submit.setOnClickListener(v -> {
                 if(holder.user_room_rate.getText().toString().isEmpty() || holder.user_room_review.getText().toString().isEmpty()){
                     holder.user_room_rate.setError("Please enter rate");

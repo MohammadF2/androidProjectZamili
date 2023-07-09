@@ -18,7 +18,7 @@ public class ReservationViewer extends RecyclerView.ViewHolder{
 
     EditText user_room_rate, user_room_review;
 
-    Button user_room_submit;
+    Button user_room_submit, canceled;
 
     public ReservationViewer(@NonNull View itemView) {
         super(itemView);
@@ -29,7 +29,7 @@ public class ReservationViewer extends RecyclerView.ViewHolder{
         room_card_date_res = itemView.findViewById(R.id.room_card_date_res);
         user_room_rate = itemView.findViewById(R.id.user_room_rate);
         user_room_review = itemView.findViewById(R.id.user_room_review);
-
+        canceled = itemView.findViewById(R.id.canceled);
         user_room_rate.setFilters(new InputFilter[]{new InputFilterMinMax("1", "5")});
 
         user_room_submit = itemView.findViewById(R.id.user_room_submit);

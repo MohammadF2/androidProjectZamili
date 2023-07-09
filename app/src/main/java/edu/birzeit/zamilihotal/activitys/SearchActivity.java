@@ -81,11 +81,18 @@ public class SearchActivity extends AppCompatActivity {
         search.setOnClickListener(v -> {
 
             TextView textView = findViewById(R.id.searchMessage);
-            textView.setText("Searching for rooms please wait");
+
 
             Log.d("isSelected", spinner.isSelected()+"");
             if(number.getText().toString().equals("")) {
                 errorTxt.setText("You must choose a number");
+                textView.setText("");
+                return;
+            }
+
+            if(DateManager.isDateInPast(datePicker.getText().toString())) {
+                errorTxt.setText("You must choose a date in the future");
+                textView.setText("");
                 return;
             }
 
@@ -99,7 +106,6 @@ public class SearchActivity extends AppCompatActivity {
 
 
     private void getReservations() {
-
         Gson gson = new Gson();
         String img_url = "https://mohammadf.site/Rest/getReservations.php";
         StringRequest request = new StringRequest(Request.Method.POST, img_url,
