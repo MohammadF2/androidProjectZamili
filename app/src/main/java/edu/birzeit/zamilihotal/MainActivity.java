@@ -49,10 +49,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser user = DataBase.auth.getCurrentUser();
-        if (user == null) {
+        if(user == null) {
             container.removeAllViews();
             getLayoutInflater().inflate(R.layout.layout_login, container, true);
             setSignUpFromSignIn();
+        } else {
+            Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 

@@ -18,6 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -61,16 +65,16 @@ public class Booking_Fragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view_curr);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         getReservations();
-        getReservations();
         Handler handler = new Handler();
         handler.postDelayed(() -> {
             recyclerView.setAdapter(new ReservationAdapter(getContext(), reservations));
-        }, 1000);
+        }, 1550);
         return view;
     }
     List<Reservation> reservations = new ArrayList<>();
+    String res = "";
 
-    private List<Reservation> getReservations() {
+    private void getReservations() {
 
         String link = "https://mohammadf.site/Rest/getUniqRes.php?userEmail="+ Objects.requireNonNull(DataBase.auth.getCurrentUser()).getEmail();
 
@@ -78,6 +82,7 @@ public class Booking_Fragment extends Fragment {
 
         StringRequest stringRequest = new StringRequest(link, response -> {
             Reservation[] reservationsArr = gson.fromJson(response, Reservation[].class);
+            this.res = response;
             this.reservations = new ArrayList<>(Arrays.asList(reservationsArr));
             Log.d("reservations", response);
         }, error -> {
@@ -90,22 +95,36 @@ public class Booking_Fragment extends Fragment {
 
         Handler handler = new Handler();
         handler.postDelayed(() -> {
+            List<String> isRated = new ArrayList<>();
+            try {
+                JSONArray jsonArray = new JSONArray(res);
+//                Log.d("jsonArray", jsonArray.length() + " ");
+//                Log.d("Reservation", reservations.size() + " ");
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    isRated.add(jsonObject.getString("IsRated"));
+                    Log.d("jsonObject", jsonObject.getString("IsRated"));
+                }
+            } catch (JSONException e) {
+                Log.e("JSONException", e.getMessage());
+            }
+
             Iterator<Reservation> iterator = reservations.iterator();
+            int index = 0;
             while (iterator.hasNext()) {
+                Log.d("index", isRated.get(index));
                 Reservation reservation = iterator.next();
-                Log.d("reservations", reservation.toString());
-
+                reservation.setIsRated(isRated.get(index));
+                index++;
                 String last = DateManager.getLastDate(reservation.getDate(), reservation.getNumberOfDays());
-
                 if (mPage == 1 && DateManager.isDateInPast(last)) {
                     iterator.remove();
                 } else if (mPage != 1 && !DateManager.isDateInPast(last)) {
                     iterator.remove();
                 }
             }
-        }, 1000);
-
-        return reservations;
+        }, 1500);
     }
 
 

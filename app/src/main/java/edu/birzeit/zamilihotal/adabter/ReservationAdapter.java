@@ -57,7 +57,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationViewer>{
         //Log.d("test11", reservations.get(position).getIsRated());
 
 
-        if(reservations.get(position).getIsRated().equals("0")){
+        if(!reservations.get(position).getIsRated().equals("1")){
             holder.user_room_submit.setClickable(true);
             holder.user_room_submit.setText("Submit");
 
@@ -99,9 +99,9 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationViewer>{
 
                     holder.user_room_submit.setClickable(false);
                     holder.user_room_submit.setText("Rated");
+                    holder.user_room_submit.setBackgroundColor(context.getResources().getColor(R.color.red));
                     holder.user_room_rate.setText("Rated");
                     holder.user_room_review.setText("Reviewed");
-
                     holder.user_room_rate.setFocusable(false);
                     holder.user_room_review.setFocusable(false);
                 }
@@ -110,6 +110,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationViewer>{
         } else {
             holder.user_room_submit.setClickable(false);
             holder.user_room_submit.setText("Rated");
+            holder.user_room_submit.setBackgroundColor(context.getResources().getColor(R.color.red));
             holder.user_room_rate.setText("Rated");
             holder.user_room_review.setText("Reviewed");
             holder.user_room_rate.setFocusable(false);
