@@ -92,7 +92,7 @@ public class ProfileActivity extends AppCompatActivity {
                 ImageView profilePicture = findViewById(R.id.profilePicture);
                 profilePicture.setImageBitmap(bitmap);
 
-                // Save the profile picture URI to SharedPreferences
+
                 SharedPreferences sp = getSharedPreferences("main", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putString("profilePictureUri", imageUri.toString());
@@ -188,7 +188,7 @@ public class ProfileActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
-        finishAffinity(); // Finish all activities in the stack
+        finishAffinity();
     }
     public void editPersonalInfo(View view) {
         Intent intent = new Intent(ProfileActivity.this, UpdateInfoActivity.class);
