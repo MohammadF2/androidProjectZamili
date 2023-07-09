@@ -12,19 +12,12 @@
 
     <ImageView
         android:id="@+id/imgAni"
-        android:layout_width="82dp"
-        android:layout_height="104dp"
-        android:layout_gravity="center"
-        android:src="@drawable/logo" />
+        android:src="@drawable/logo"
+        style="@style/imgSpash" />
 
     <TextView
         android:id="@+id/txtAni"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:layout_gravity="center"
-        android:textSize="25dp"
-        android:text="Welcome to Zamili hotel"
-         />
+        android:text="@string/welcome_to_zamili_hotel"
+        style="@style/text_splash" />
 
 </LinearLayout>
