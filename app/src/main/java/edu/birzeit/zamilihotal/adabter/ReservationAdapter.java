@@ -67,7 +67,7 @@ public class ReservationAdapter extends RecyclerView.Adapter<ReservationViewer>{
         } else {
             holder.canceled.setOnClickListener(v -> {
                 AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-                builder.setTitle("Confirm Exit");
+                builder.setTitle("Confirm cancel");
                 builder.setMessage("Are you sure you want to cancel the reservation?");
                 builder.setPositiveButton("Back", null);
                 builder.setNegativeButton("Cancel", (dialogInterface, i) -> {

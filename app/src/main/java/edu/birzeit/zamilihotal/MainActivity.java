@@ -67,6 +67,23 @@ public class MainActivity extends AppCompatActivity {
          TextView error = findViewById(R.id.errorSignUp);
          Button signInB = findViewById(R.id.cirLoginButton);
 
+         TextView forgetPassword = findViewById(R.id.forgotPassword);
+
+        forgetPassword.setOnClickListener(v -> {
+            if(email.getText().toString().equals(""))
+                error.setText("You should enter email");
+            else {
+                String emailTxt = email.getText().toString();
+                DataBase.auth.sendPasswordResetEmail(emailTxt).addOnCompleteListener(task -> {
+                    if(task.isSuccessful()) {
+                        error.setText("Check your email to reset your password");
+                    } else {
+                        error.setText("Email is wrong");
+                    }
+                });
+            }
+        });
+
          signInB.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
